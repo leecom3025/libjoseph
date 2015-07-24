@@ -37,7 +37,7 @@
 
 #include "joseph_common.h"
 
-#define JPERF_ENABLE 1
+// #define JPERF_ENABLE 1
 // #define TERM
 // #define JPERF_PRECISION 100 /* adjust time to write */
 
@@ -59,6 +59,7 @@
 #endif
 
 // usage 
+// jperf_adjust() // adjust drift for high precision
 // jperf_start() 
 // 		... do some work
 // jperf_stop()
@@ -72,6 +73,7 @@ typedef struct timeMeasure {
 } timeMeasure;
 
 static struct timeMeasure *jperf;
+static double drift;
 
 #ifdef __cplusplus
 extern "C" {

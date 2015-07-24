@@ -17,7 +17,9 @@
 #include "libjoseph.h"
 
 int main (int argc, char* argv[]) {
-
+	if (argc != 2 && argv[0] != NULL) {
+		int a = 1;
+	}
 /*
 	if (argc != 2) {
 	    fprintf(stderr, "Usage: %s <flush-frequency-in-seconds>\n", argv[0]);
@@ -59,6 +61,19 @@ int main (int argc, char* argv[]) {
 	jperf_write(path, "Job\tTaken", "Sleep:\t");
 	printf("%ld\n", jperf_time());
 
+#ifdef WITH_ZMQ
+	printf("======= static_zmq test =======\n");
+	void *context = zmq_init(1);
+	assert(context != NULL);
+	printf("passed!\n");
+#endif
+
+#ifdef WITH_CJSON
+	printf("======= static_cjson test =======\n");
+	cJSON *root = cJSON_CreateObject();  
+	assert(root != NULL);
+	printf("passed!\n");
+#endif
+
 	return 0;
 }
-

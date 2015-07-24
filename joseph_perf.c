@@ -71,7 +71,7 @@ unsigned long jperf_time() {
 	free(p);
 #endif
 	
-	ret = jperf->time_took;
+	ret = jperf->time_took - drift;
 	free(jperf);
 #endif
 
@@ -148,9 +148,8 @@ int jperf_write(char* filename, char* header, char* pattern) {
 		jperf_record_init(filename, header);
 	FILE *out = fopen(filename, "a");
 
-#ifdef JPERF_PRECISION
-	jperf->time_took -= JPERF_PRECISION;
-#endif
+	jperf->time_took -= drift;
+	// printf("%f\n", drift);
 
 	fprintf(out, "%s%lu\n", pattern, jperf->time_took);
 	fclose(out);
@@ -186,28 +185,48 @@ int jperf_record(char* filename, char* at) {
 }
 
 int jperf_adjust() {
-	int i;
-	unsigned long shift = 0;
-	char *path = "/data/joseph/jperf_adjust";
 
 #ifdef JPERF_ENABLE
-	printf(">> adjusting time drift... (takes ~2 mins)\n");
+	int i, j, k, iterate = 20;
+	unsigned long shift = 0;
+	double _shift = 0;
+	char *path = "/data/joseph/jperf_adjust";
+	const char *precision_path = "/data/joseph/jperf_precision";
+	const int size = 3*1024*1024; // Allocate 3M. Set much larger then L2
 
-	for (i = 0; i < 100; i++) {
-		jperf_start();
-			sleep(1);
-		jperf_stop();
-		jperf_write(path, "Job\tTaken", "Sleep:\t");
-		shift += (jperf_time() - 1000000);
+	if (access(precision_path, F_OK) != -1) {
+		FILE *out = fopen(precision_path, "r");
+		fscanf(out, "%lf", &_shift);
+		fclose(out);
+	} else {
+		printf(">> adjusting time drift... (takes ~4 mins)\n");
+
+		for (i = 0; i < iterate; i++) {
+			jperf_start();
+				sleep(1);
+			jperf_stop();
+			jperf_write(path, "Job\tTaken", "Sleep:\t");
+			shift += (jperf_time() - 1000000);
+
+			char *c = (char *) malloc(size); //cache flush
+			for (k = 0; k < 0xff; k++)
+				for (j = 0; j < size; j++)
+					c[j] = k*j;
+			free(c);
+
+		}
+
+		jperf_record_delete(path);
+		_shift = (((double)shift) / iterate);
+
+		FILE *out = fopen(precision_path, "w");
+		fprintf(out, "%lf", _shift);
+		fclose(out);
 	}
 
-	jperf_record_delete(path);
 	printf("shift: %ld\n", shift);
-	printf("avg shift: %ld\n", shift/100);
-
-	FILE *out = fopen("/data/joseph/jperf_precision", "w");
-	fprintf(out, "%ld", (shift/100));
-	fclose(out);
+	printf("avg shift: %lf\n", _shift);
+	drift = _shift;
 #endif
 
 	return 0;

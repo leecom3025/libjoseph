@@ -17,15 +17,19 @@
 #include "joseph_utils.h"
 #include "joseph_perf.h"
 #include <jni.h>
-// #include <zmq.h>
-// #include <curl/curl.h>
-// #include "cJSON.h"
 
+#ifdef WITH_ZMQ
+	#include <zmq.h>
+#endif
 
-#define Stencil_Server "10.0.0.10"
+#ifdef WITH_PERF
+ 	#include <linux/perf_event.h>
+#endif
 
-#define Noti_Port 30002
-#define Ac_Port 30001
+#ifdef WITH_CJSON
+ 	#include <cJSON.h>
+#endif
 
-#define STENCIL_Noti "tcp://*:30002"
-
+#ifdef WITH_CURL
+	#include <curl/curl.h>
+#endif 
