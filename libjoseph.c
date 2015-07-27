@@ -88,7 +88,31 @@ int main (int argc, char* argv[]) {
 	printf("passed!\n");
 #endif
 
+	printf("====== joseph_thermal test ======\n");
 
+	int temperature, online;
+	int *utils, *freqs;
+
+	Joseph_readCPU_temp(&temperature);
+	printf("Temperature: %d\n", temperature);
+
+	Joseph_readCPU_allutils(&utils, &online);
+	for (i = 0; i < online; i++) {
+		printf("CPU %d util: %d%%\n", i, *(utils + i));
+	}
+	Joseph_readCPU_allutils_free(&utils);
+
+	Joseph_readCPU_allfreqs(&freqs, &online);
+	for (i = 0; i < online; i++) {
+		printf("CPU %d freq: %dHz\n", i, *(freqs + i));
+	}
+	Joseph_readCPU_allfreqs_free(&freqs);
+
+	Joseph_readCPU_both(&utils, &freqs, &online);
+	for (i = 0; i < online; i++) {
+		printf("CPU %d: (%d%%, %dHz)\n", i, *(utils + i), *(freqs + i));
+	}
+	Joseph_readCPU_both_free(&utils, &freqs);
 
 	return 0;
 }

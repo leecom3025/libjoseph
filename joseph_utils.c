@@ -31,7 +31,6 @@
 static const char* CPU_ONLINE   = "/sys/devices/system/cpu/cpu%d/online";
 static const char* CPU_UTIL     = "/sys/devices/system/cpu/cpu%d/cpufreq/cpu_utilization";
 static const char* CPU_FREQ     = "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq";
-static const int CPU_NUM = 4;
 
 
 /*
@@ -255,7 +254,7 @@ int Joseph_resetFile(char *arg) {
  *  (pointer to Int)
  * Usage:
  *  int temp;
- *  if (Joseph_readCPUTemp(&temp) < 0)
+ *  if (Joseph_readCPU_temp(&temp) < 0)
  *    perror(strerror(errno));
  */
 int Joseph_readCPU_temp(int *mTemp) {
@@ -273,9 +272,137 @@ int Joseph_readCPU_temp(int *mTemp) {
 }
 
 int Joseph_readCPU_util(int cpu, int *mUtil) {
+  FILE *pFile;
+  char *mFileName;
+  int mOnline = 0;
+
+  mFileName = (char*) malloc(strlen(CPU_FREQ) + sizeof(int));
+  sprintf(mFileName, CPU_ONLINE, cpu);
+  if ((pFile = fopen(mFileName, "r")) == NULL) {
+    JLE("ERROR: %s", strerror(errno));
+    return -1;
+  }
+  fscanf(pFile, "%d", &mOnline);
+  fclose(pFile);
+
+  if (mOnline != 1) {
+    JLW("CPU %d is offline", cpu);
+    return -1;
+  }
+
+  sprintf(mFileName, CPU_UTIL, cpu);
+  if ((pFile = fopen(mFileName, "r")) == NULL) {
+    JLE("ERROR: %s", strerror(errno));
+    return -1;
+  }
+  fscanf(pFile, "%d", mUtil);
+  fclose(pFile);
+  free(mFileName);
+
   return 0;
 }
 
 int Joseph_readCPU_freq(int cpu, int *mFreq) {
+  FILE *pFile;
+  char *mFileName;
+  int mOnline = 0;
+
+  mFileName = (char*) malloc(strlen(CPU_FREQ) + sizeof(int));
+  sprintf(mFileName, CPU_ONLINE, cpu);
+  if ((pFile = fopen(mFileName, "r")) == NULL) {
+    JLE("ERROR: %s", strerror(errno));
+    return -1;
+  }
+
+  fscanf(pFile, "%d", &mOnline);
+  fclose(pFile);
+
+  if (mOnline != 1) {
+    JLW("CPU %d is offline", cpu);
+    return -1;
+  }
+
+  sprintf(mFileName, CPU_FREQ, cpu);
+  if ((pFile = fopen(mFileName, "r")) == NULL) {
+    JLE("ERROR: %s", strerror(errno));
+    return -1;
+  }
+
+  fscanf(pFile, "%d", mFreq);
+  fclose(pFile);
+  free(mFileName);
+
+  return 0;
+}
+
+/*
+ * Param: 
+ *  (pointer to pointer to Int arr, pointer to Int)
+ * Usage:
+ *  int *utils;
+ *  int online;
+ *  Joseph_readCPU_allutils(&utils, &online);
+ *  for (int i = 0; i < online; i++) 
+ *    printf("%d ", *(utils + i));
+ *  Joseph_readCPU_allutils_free(&utils); // make sure to free
+ */
+int Joseph_readCPU_allutils(int **mUtil, int *online) {
+  int (*tUtil)[CPU_NUM];
+  int i;
+
+  *online = 0;
+  tUtil = malloc(sizeof(int32_t) * CPU_NUM);
+
+  for (i = 0; i < CPU_NUM; i++) {
+    if (Joseph_readCPU_util(i, &((*tUtil)[i])) > - 1) {
+      (*(online))++;
+      // printf("CPU %d: %d\n", i, (*tUtil)[i]);
+    }
+  } 
+
+  *mUtil = *tUtil;
+  return 0;
+}
+
+int Joseph_readCPU_allutils_free(int **mUtil) {
+  free(*mUtil);
+  return 0;
+}
+
+int Joseph_readCPU_allfreqs(int **mFreq, int *online) {
+  int (*tFreq)[CPU_NUM];
+  int i;
+
+  *online = 0;
+  tFreq = malloc(sizeof(int32_t) * CPU_NUM);
+
+  for (i = 0; i < CPU_NUM; i++) {
+    // #if DONTREAD
+    //   Joseph_readCPU_freq(i, &((*tFreq)[i]));
+    // #else
+      if(Joseph_readCPU_freq(i, &((*tFreq)[i])) > -1) {
+          (*(online))++;
+      }
+    // #endif
+  }
+  *mFreq = *tFreq;
+  return 0;
+}
+
+int Joseph_readCPU_allfreqs_free(int **mFreq) {
+  free(mFreq);
+  return 0;
+}
+
+int Joseph_readCPU_both(int **mUtil, int **mFreq, int *online) {
+  Joseph_readCPU_allutils(mUtil, online);
+  Joseph_readCPU_allfreqs(mFreq, online);
+
+  return 0;
+}
+
+int Joseph_readCPU_both_free(int **mUtil, int **mFreq) {
+  Joseph_readCPU_allutils_free(mUtil);
+  Joseph_readCPU_allfreqs_free(mFreq);
   return 0;
 }

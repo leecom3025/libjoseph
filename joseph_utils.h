@@ -26,6 +26,7 @@
 #include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/resource.h>
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
@@ -52,9 +53,19 @@ extern "C" {
 	int Joseph_resetFile(char *arg);
 
 	/* Thermal read/write */
+	static const int CPU_NUM = 4;
+
 	int Joseph_readCPU_temp(int *mTemp);
 	int Joseph_readCPU_util(int cpu, int *mUtil);
+	int Joseph_readCPU_allutils(int **mUtil, int *online);
 	int Joseph_readCPU_freq(int cpu, int *mFreq);
+	int Joseph_readCPU_allfreqs(int **mFreq, int *online);
+	int Joseph_readCPU_both(int **mUtil, int **mFreq, int *online);
+
+	int Joseph_readCPU_allutils_free(int **mUtil);
+	int Joseph_readCPU_allfreqs_free(int **mFreq);
+	int Joseph_readCPU_both_free(int **mUtil, int **mFreq);
+
 
 #ifdef __cplusplus
 }
