@@ -34,11 +34,11 @@ function init() {
 	case $arg in
 		"zmq") 
 			echo "Fetching zmq~!"
-			git clone http://github.com/forkjoseph/android_external_zmq ../zmq
+			git clone http://github.com/forkjoseph/android_external_zmq ../../zmq
 			;;
 		"cjson") 
 			echo "Fetching cjson~!"
-			git clone http://github.com/forkjoseph/android_external_libcjson ../libcjson
+			git clone http://github.com/forkjoseph/android_external_libcjson ../../libcjson
 			;;
 		*) 
 			echo "WHAT??? $1"
