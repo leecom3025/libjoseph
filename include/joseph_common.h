@@ -24,12 +24,14 @@
 #include <log/logger.h>
 
 /* define  */
-#define JLD(...) ((void)ALOG(LOG_DEBUG, "Joseph_Utils", __VA_ARGS__))
-#define JLE(...) ((void)ALOG(LOG_ERROR, "Joseph_Utils", __VA_ARGS__))
-#define JLW(...) ((void)ALOG(LOG_WARN, "Joseph_Utils", __VA_ARGS__))
-
 #ifdef ANDROID
- #define DEFAULT_PATH "/data/joseph"
+ 	#define DEFAULT_PATH "/data/joseph"
+	#define JLD(...) ((void)ALOG(LOG_DEBUG, "libJoseph", __VA_ARGS__))
+	#define JLE(...) ((void)ALOG(LOG_ERROR, "libJoseph", __VA_ARGS__))
+	#define JLW(...) ((void)ALOG(LOG_WARN, "libJoseph", __VA_ARGS__))
 #else
- #define DEFAULT_PATH "/tmp/joseph"
+	#define DEFAULT_PATH "/tmp/joseph"
+ 	#define JLD(...) (printf(__VA_ARGS__))
+ 	#define JLE(...) (printf(__VA_ARGS__))
+  	#define JLW(...) (printf(__VA_ARGS__))
 #endif
