@@ -20,7 +20,7 @@ function push() {
 	declare -a arr=($(echo $TARGET_PRODUCT | cut -d '_' --output-delimiter="; " -f1-))
 	local product=${arr[1]}
 	echo ">>>>> $product"
-	adb push ../../out/target/product/$product/system/bin/joseph sdcard/
+	adb push ../../../out/target/product/$product/system/bin/joseph sdcard/
 	adb shell ./test.sh
 }
 
