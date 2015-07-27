@@ -43,6 +43,16 @@ JLD("%ld\n", jperf_time()); // print
 - Nexus 4 (mako)
 - Nexus 5 (hammerhead)
 
+## Dependency
+libJoseph depends on [ZeroMQ (v4.x](https://github.com/zeromq/libzmq), [cJSON](https://github.com/kbranigan/cJSON).
+
+If you want to fetch them with *Android porting*, do:
+```shell
+cd external/libjoseph
+cd scripts
+./fetch.sh [zmq, cjson]
+```
+
 ## Disclaimer
 You are welcome to use library as long as license is denoted. 
 
