@@ -32,7 +32,7 @@ jperf_adjust(); // adjust drift for high precision
 jperf_start();
 	// ... do some work
 jperf_stop();
-jperf_write("/data/joseph/jperf_data", "Job\tTime", "work");
+jperf_write("/data/joseph/jperf_data", "Job\tTime", "work:\t");
 JLD("%ld\n", jperf_time()); // print
 ```
 
