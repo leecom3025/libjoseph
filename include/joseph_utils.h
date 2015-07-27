@@ -52,6 +52,7 @@ extern "C" {
 	int Joseph_appendString(char *arg, char **value);
 	int Joseph_resetFile(char *arg);
 
+	#ifdef ANDROID /* Thermal unit supported for Android only currently */
 	/* Thermal read/write */
 	static const int CPU_NUM = 4;
 
@@ -65,7 +66,7 @@ extern "C" {
 	int Joseph_readCPU_allutils_free(int **mUtil);
 	int Joseph_readCPU_allfreqs_free(int **mFreq);
 	int Joseph_readCPU_both_free(int **mUtil, int **mFreq);
-
+	#endif // ANDROID
 
 #ifdef __cplusplus
 }
