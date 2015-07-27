@@ -20,11 +20,22 @@ Joseph Library is a lightweight library to easily call system calls.
 	- jperf_usage
 
 ## Examples
+Joseph_getString:
 ```C++
-char *path;
-if (Joseph_getPath("version", &path) < 0)
+char *model;
+if (Joseph_getString("model", &model) < 0) //read "/data/joseph/model"
 	perror(strerror(errno));
 ```
+jperf: 
+```C++
+jperf_adjust(); // adjust drift for high precision
+jperf_start();
+	// ... do some work
+jperf_stop();
+jperf_write("/data/joseph/jperf_data", "Job\tTime", "work");
+JLD("%ld\n", jperf_time()); // print
+```
+
 
 ## Supported models
 - Nexus 4 (mako)
