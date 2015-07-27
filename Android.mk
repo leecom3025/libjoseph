@@ -41,7 +41,7 @@ LOCAL_SRC_FILES := \
 	joseph_perf.c
 
 LOCAL_C_INCLUDES += \
-	$(LOCAL_PATH)
+	$(LOCAL_PATH)/include
 	# external/curl/include \
 
 LOCAL_SHARED_LIBRARIES += \
@@ -115,7 +115,7 @@ LOCAL_SRC_FILES := \
 	joseph_perf.c
 
 LOCAL_C_INCLUDES += \
-	$(LOCAL_PATH)
+	$(LOCAL_PATH)/include
 	# external/curl/include \
 
 LOCAL_SHARED_LIBRARIES += \
