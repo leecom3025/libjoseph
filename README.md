@@ -1,7 +1,9 @@
-Joseph Library
+libJoseph
 ===============================================================================
-Joseph Library is a lightweight library to easily call system calls. 
-
+libJoseph is a lightweight library to easily call system calls. 
+```git
+git clone https://github.com/forkjoseph/joseph external/libjoseph
+```
 
 ## APIs
 * joseph_utils
