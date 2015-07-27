@@ -23,14 +23,6 @@ int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
-/*
-	if (argc != 2) {
-	    fprintf(stderr, "Usage: %s <flush-frequency-in-seconds>\n", argv[0]);
-	    exit(2);
-	} else {
-        int frequency = atoi(argv[1]);
-	}
-*/
 
 #ifdef PRODUCT
 	printf("Product is ");
