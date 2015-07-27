@@ -34,6 +34,9 @@ function build() {
 		"n7")
 			lunch aosp_flo-eng
 			;;
+		"x86")
+			lunch android_x86-eng
+			;;
 		*)
 			echo "**** Wrong Target!!! ($1)*****"
 			exit 1
@@ -64,6 +67,10 @@ function flash() {
 			;;
 		"n7")
 			TARGET="flo"
+			;;
+		"x86")
+			make -j20 iso_img
+			exit 1
 			;;
 		*)
 			echo "**** Wrong Target!!! ($1)*****"
