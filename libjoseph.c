@@ -16,6 +16,9 @@
 
 #include "libjoseph.h"
 
+//APQ8064 - Nexus 4
+//MSM8974 - Nexus 5
+
 int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
@@ -28,6 +31,16 @@ int main (int argc, char* argv[]) {
         int frequency = atoi(argv[1]);
 	}
 */
+
+#ifdef PRODUCT
+	printf("Product is ");
+	if (strcmp(PRODUCT, hammerhead) == 0)
+		printf("Nexus 5 (%s)!\n", PRODUCT);
+	else if (strcmp(PRODUCT, mako) == 0)
+		printf("Nexus 4 (%s)!\n", PRODUCT);
+	else
+		printf("Unknown (%s)!\n", PRODUCT);
+#endif
 
 	printf("======= joseph_utils test =======\n");
 
@@ -74,6 +87,8 @@ int main (int argc, char* argv[]) {
 	assert(root != NULL);
 	printf("passed!\n");
 #endif
+
+
 
 	return 0;
 }

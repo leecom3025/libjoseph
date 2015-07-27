@@ -18,6 +18,22 @@
 
 #define DEFAULT_PATH "/data/joseph"
 
+// This is for CPU temp, util, freq.
+// /sys/class/thermal/thermal_zone5/temp
+// /sys/devices/system/cpu/cpu0/cpufreq/cpu_utilization
+// /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+
+#ifdef PRODUCT
+ static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
+#else 
+ static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
+#endif 
+static const char* CPU_ONLINE   = "/sys/devices/system/cpu/cpu%d/online";
+static const char* CPU_UTIL     = "/sys/devices/system/cpu/cpu%d/cpufreq/cpu_utilization";
+static const char* CPU_FREQ     = "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq";
+static const int CPU_NUM = 4;
+
+
 /*
  * Param: 
  *  (filename, pointer to char)
@@ -230,5 +246,36 @@ int Joseph_resetFile(char *arg) {
   }
   fprintf(fd, "\0");
   fclose(fd);
+  return 0;
+}
+
+/* Thermal read/write */
+/*
+ * Param: 
+ *  (pointer to Int)
+ * Usage:
+ *  int temp;
+ *  if (Joseph_readCPUTemp(&temp) < 0)
+ *    perror(strerror(errno));
+ */
+int Joseph_readCPU_temp(int *mTemp) {
+  FILE *pFile;
+
+  setpriority(PRIO_PROCESS, 0, -20);
+  if ((pFile = fopen(CPU_TEMP, "r")) == NULL) { 
+    JLE("ERROR: %s", strerror(errno));
+    return -1;
+  }
+
+  fscanf(pFile, "%d", mTemp);
+  fclose(pFile);
+  return 0;
+}
+
+int Joseph_readCPU_util(int cpu, int *mUtil) {
+  return 0;
+}
+
+int Joseph_readCPU_freq(int cpu, int *mFreq) {
   return 0;
 }

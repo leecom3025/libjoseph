@@ -1,29 +1,39 @@
-##
- # Copyright (C) 2015 HyunJong Joseph Lee, Korvo, Georgia Tech
- #
- # Licensed under the Apache License, Version 2.0 (the "License");
- # you may not use this file except in compliance with the License.
- # You may obtain a copy of the License at
- #
- #      http://www.apache.org/licenses/LICENSE-2.0
- #
- # Unless required by applicable law or agreed to in writing, software
- # distributed under the License is distributed on an "AS IS" BASIS,
- # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- # See the License for the specific language governing permissions and
- # limitations under the License.
- ##
+#------------------------------------------------------------------------------
+# Copyright (C) 2015 HyunJong Joseph Lee, Korvo, Georgia Tech
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#------------------------------------------------------------------------------
+#==============================================================================
+# Author(s): = "HyunJong Joseph Lee"
+#==============================================================================
+
 LOCAL_PATH:= $(call my-dir)
 
-#####################################################
+#------------------------------------------------------------------------------
 # shared library
-#####################################################
+#------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 LOCAL_MODULE := libjoseph
 
 WITH_ZMQ := true
 # WITH_PERF := true
 WITH_CJSON := true
+
+ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+else ifeq ($(TARGET_PRODUCT), full_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+endif
 
 LOCAL_SRC_FILES := \
 	libjoseph.c \
@@ -46,7 +56,6 @@ LOCAL_CFLAGS += \
 
 LOCAL_LDLIBS += \
 	-llog \
-	-lz \
 	-ldl \
 	-lstdc++
 
@@ -83,9 +92,9 @@ endif
 
 include $(BUILD_SHARED_LIBRARY)
 
-#####################################################
+#------------------------------------------------------------------------------
 # executable
-#####################################################
+#------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 LOCAL_MODULE := joseph
 
@@ -93,6 +102,12 @@ WITH_JPERF := true
 WITH_ZMQ := true
 # WITH_PERF := true
 WITH_CJSON := true
+
+ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+else ifeq ($(TARGET_PRODUCT), full_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+endif
 
 LOCAL_SRC_FILES := \
 	libjoseph.c \
@@ -115,7 +130,6 @@ LOCAL_CFLAGS += \
 
 LOCAL_LDLIBS += \
 	-llog \
-	-lz \
 	-ldl \
 	-lstdc++
 

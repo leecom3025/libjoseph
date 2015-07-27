@@ -18,6 +18,10 @@
 #include "joseph_perf.h"
 #include <jni.h>
 
+/* Code names */
+#define hammerhead "hammerhead"
+#define mako "mako"
+
 #ifdef WITH_ZMQ
 	#include <zmq.h>
 #endif

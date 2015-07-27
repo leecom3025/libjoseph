@@ -51,6 +51,11 @@ extern "C" {
 	int Joseph_appendString(char *arg, char **value);
 	int Joseph_resetFile(char *arg);
 
+	/* Thermal read/write */
+	int Joseph_readCPU_temp(int *mTemp);
+	int Joseph_readCPU_util(int cpu, int *mUtil);
+	int Joseph_readCPU_freq(int cpu, int *mFreq);
+
 #ifdef __cplusplus
 }
 #endif
