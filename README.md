@@ -6,12 +6,13 @@ Joseph Library is a lightweight library to easily call system calls.
 ## APIs
 * joseph_utils
 	- Joseph_getPath
-	```` 
-	char *path;
- 	if (Joseph_getPath("version", &path) < 0)
- 		perror(strerror(errno));
- 	````
- 	
+		Usage:
+		```` 
+		char *path;
+	 	if (Joseph_getPath("version", &path) < 0)
+	 		perror(strerror(errno));
+	 	````
+
 
 ## Supported models
 - Nexus 4 (mako)
