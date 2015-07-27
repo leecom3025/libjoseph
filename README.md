@@ -32,4 +32,5 @@ if (Joseph_getPath("version", &path) < 0)
 
 ## Disclaimer
 You are welcome to use library as long as license is denoted. 
+
 License is in LICENSE file. 
