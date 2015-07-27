@@ -1,8 +1,8 @@
 libJoseph
 ===============================================================================
-libJoseph is a lightweight library to easily call system calls. 
+libJoseph is a lightweight library to provide high-level abstraction of POSIX system calls. 
 ```git
-git clone https://github.com/forkjoseph/joseph external/libjoseph
+git clone https://github.com/forkjoseph/libjoseph external/libjoseph
 ```
 
 ## APIs
