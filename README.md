@@ -7,11 +7,12 @@ Joseph Library is a lightweight library to easily call system calls.
 * joseph_utils
 	- Joseph_getPath
 		Usage:
-		```` 
+		
+		```
 		char *path;
 	 	if (Joseph_getPath("version", &path) < 0)
 	 		perror(strerror(errno));
-	 	````
+	 	```
 
 
 ## Supported models
