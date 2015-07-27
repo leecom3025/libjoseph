@@ -16,13 +16,12 @@
 
 #include "libjoseph.h"
 
-//APQ8064 - Nexus 4
-//MSM8974 - Nexus 5
-
 int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
+
+	// printf("%s\n", DEFAULT_PATH);
 
 #ifdef PRODUCT
 	printf("Product is ");
@@ -80,6 +79,8 @@ int main (int argc, char* argv[]) {
 	printf("passed!\n");
 #endif
 
+	/* Thermal unit supported for Android only currently */
+#ifdef ANDROID
 	printf("====== joseph_thermal test ======\n");
 
 	int temperature, online;
@@ -105,6 +106,7 @@ int main (int argc, char* argv[]) {
 		printf("CPU %d: (%d%%, %dHz)\n", i, *(utils + i), *(freqs + i));
 	}
 	Joseph_readCPU_both_free(&utils, &freqs);
+#endif
 
 	return 0;
 }

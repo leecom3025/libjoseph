@@ -28,3 +28,8 @@
 #define JLE(...) ((void)ALOG(LOG_ERROR, "Joseph_Utils", __VA_ARGS__))
 #define JLW(...) ((void)ALOG(LOG_WARN, "Joseph_Utils", __VA_ARGS__))
 
+#ifdef ANDROID
+ #define DEFAULT_PATH "/data/joseph"
+#else
+ #define DEFAULT_PATH "/tmp/joseph"
+#endif

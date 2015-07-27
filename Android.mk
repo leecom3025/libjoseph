@@ -51,6 +51,7 @@ LOCAL_SHARED_LIBRARIES += \
 	liblog
 
 LOCAL_CFLAGS += \
+	-DANDROID=1 \
 	-DJPERF_ENABLE=1 \
 	-Wno-format-contains-nul
 
@@ -125,6 +126,7 @@ LOCAL_SHARED_LIBRARIES += \
 	liblog
 
 LOCAL_CFLAGS += \
+	-DANDROID=1 \
 	-DJPERF_ENABLE=1 \
 	-Wno-format-contains-nul
 
@@ -132,9 +134,6 @@ LOCAL_LDLIBS += \
 	-llog \
 	-ldl \
 	-lstdc++
-
-# LOCAL_EXPORT_CFLAGS += \
-# 	-DJPERF_ENABLE=1
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_PRELINK_MODULE := false
