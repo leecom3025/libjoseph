@@ -26,12 +26,40 @@
 /* define  */
 #ifdef ANDROID
  	#define DEFAULT_PATH "/data/joseph"
-	#define JLD(...) ((void)ALOG(LOG_DEBUG, "libJoseph", __VA_ARGS__))
-	#define JLE(...) ((void)ALOG(LOG_ERROR, "libJoseph", __VA_ARGS__))
-	#define JLW(...) ((void)ALOG(LOG_WARN, "libJoseph", __VA_ARGS__))
- 	#define JFD(...) \
+ 	#define JLOG(x, ...) \
+ 	{\
+ 		(printf("%s: ", x)); \
+ 		(printf(__VA_ARGS__)); \
+ 		(printf("\n")); \
+ 	} //
+	#define JLD(...) \
+ 	{ \
+ 		((void)ALOG(LOG_DEBUG, "libJoseph", __VA_ARGS__)); \
+  		JLOG("Debug", __VA_ARGS__); \
+  	} //
+	#define JLE(...) \
+	{ \
+  		((void)ALOG(LOG_ERROR, "libJoseph", __VA_ARGS__)); \
+  		JLOG("Error", __VA_ARGS__); \
+  	} //
+	#define JLW(...) \
+	{ \
+  		((void)ALOG(LOG_WARN, "libJoseph", __VA_ARGS__)); \
+  		JLOG("Warming", __VA_ARGS__); \
+  	} //
+  	#define JFD(...) \
+  	{ \
  		((void)ALOG(LOG_DEBUG, "libjoseph", "(%s) %s\n", \
- 			__FUNCTION__, __VA_ARGS__ ))
+ 			__FUNCTION__, __VA_ARGS__ )); \
+ 		(printf("FuncDebug(%s): ", __FUNCTION__); \
+ 		(printf(__VA_ARGS__)); \
+ 		(printf("\n")); \
+ 	} //
+ 	#define JLT(...) \
+ 	{ \
+ 		((void)ALOG(LOG_DEBUG, "libjoseph_test", __VA_ARGS__)); \
+ 		JLOG(">>> Test", __VA_ARGS__); \
+ 	} //
 #else
 	#define DEFAULT_PATH "/tmp/joseph"
  	#define JLD(...) (printf(__VA_ARGS__))

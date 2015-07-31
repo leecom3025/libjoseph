@@ -21,8 +21,7 @@ int main (int argc, char* argv[]) {
 		int a = 1;
 	}
 
-	// printf("%s\n", DEFAULT_PATH);
-
+	JLT("Default path is %s", DEFAULT_PATH);
 #ifdef PRODUCT
 	printf("Product is ");
 	if (strcmp(PRODUCT, hammerhead) == 0)
@@ -33,8 +32,7 @@ int main (int argc, char* argv[]) {
 		printf("Unknown (%s)!\n", PRODUCT);
 #endif
 
-	printf("======= joseph_utils test =======\n");
-
+	JLT("======= joseph_utils test =======");
 	int int_test, i;
 	char *string_test, *path;
 	double double_test;
@@ -54,8 +52,9 @@ int main (int argc, char* argv[]) {
 
 	Joseph_getPath("jperf_test", &path);
 	printf("Path: %s\n", path);
+	JLT("JUtils passed!");
 
-	printf("======= joseph_perf test =======\n");
+	JLT("======= joseph_perf test =======");
 	jperf_usage();
 
 	jperf_adjust();
@@ -64,24 +63,25 @@ int main (int argc, char* argv[]) {
 	jperf_stop();
 	jperf_write(path, "Job\tTaken", "Sleep:\t");
 	printf("%ld\n", jperf_time());
+	JLT("JPerf passed!");
 
 #ifdef WITH_ZMQ
-	printf("======= static_zmq test =======\n");
+	JLT("======= static_zmq test =======");
 	void *context = zmq_init(1);
 	assert(context != NULL);
-	printf("passed!\n");
+	JLT("ZeroMQ passed");
 #endif
 
 #ifdef WITH_CJSON
-	printf("======= static_cjson test =======\n");
+	JLT("======= static_cjson test =======");
 	cJSON *root = cJSON_CreateObject();  
 	assert(root != NULL);
-	printf("passed!\n");
+	JLT("cJSON passed!");
 #endif
 
 	/* Thermal unit supported for Android only currently */
 #ifdef ANDROID
-	printf("====== joseph_thermal test ======\n");
+	JLT("====== joseph_thermal test ======");
 
 	int temperature, online;
 	int *utils, *freqs;
@@ -106,15 +106,78 @@ int main (int argc, char* argv[]) {
 		printf("CPU %d: (%d%%, %dHz)\n", i, *(utils + i), *(freqs + i));
 	}
 	Joseph_readCPU_both_free(&utils, &freqs);
+	JLT("JTherm passed!");
 #endif
 
 
-	printf("====== joseph_net test ======\n");
+	JLT("====== joseph_net test ======");
 	struct jsocket *sck;
 	int port = 30331;
-	jnet_init(&sck, JNET_TCP);
-	jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1");
+	int pid = fork();
+	if (pid > 0) { // parent
+		if (jnet_init(&sck, JNET_TCP) < 0) 
+			JLE("jnet_init");
+		if (jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
+			JLE("jnet_prep");
+		char *msg;
+		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("jnet_recv");
+		if (jnet_send(&sck, &msg) < 0)
+			JLE("jnet_send");
+		if (jnet_done(&sck) < 0)
+			JLE("jnet_done");
+		JLT("JNET_TCP passed!");
+	} else if (pid == 0) { // child 
+		if (jnet_init(&sck, JNET_TCP) < 0) 
+			JLE("jnet_init");
+		if (jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
+			JLE("jnet_prep");
+		char *msg = "TEST SUCCESS";
+		if (jnet_send(&sck, &msg) < 0) 
+			JLE("jnet_send");
+		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("jnet_recv");
+		if (jnet_done(&sck) < 0)
+			JLE("jnet_done");
 
+		return 0; // kill child
+	} else {
+		JLE("fork() failed");
+		return -1;
+	}
+
+	sleep(2);
+	port = 30332;
+	pid = fork();
+	if (pid > 0) { // parent
+		if (jnet_init(&sck, JNET_UDP) < 0) 
+			JLE("jnet_init");
+		if (jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
+			JLE("jnet_prep");
+		char *msg;
+		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("jnet_recv");
+		if (jnet_send(&sck, &msg) < 0)
+			JLE("jnet_send");
+		if (jnet_done(&sck) < 0)
+			JLE("jnet_done");
+		JLT("JNET_UDP passed!");
+	} else if (pid == 0) { // child 
+		if (jnet_init(&sck, JNET_UDP) < 0) 
+			JLE("jnet_init");
+		if (jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
+			JLE("jnet_prep");
+		char *msg = "TEST SUCCESS";
+		if (jnet_send(&sck, &msg) < 0) 
+			JLE("jnet_send");
+		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("jnet_recv");
+		if (jnet_done(&sck) < 0)
+			JLE("jnet_done");
+		return 0; // kill child
+	} else {
+		JLE("fork() failed");
+	}
 
 	return 0;
 }

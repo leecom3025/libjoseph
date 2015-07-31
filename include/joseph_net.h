@@ -44,16 +44,24 @@
 #define JNET_CLIENT 	0x2
 
 #define JNET_ERR(x) \
- JLE("JNet_Err: %s\n", strerror(errno)); \
- free(x); \
- return -1;
+ { \
+ 	JLE("JNet_Err: %s\n", strerror(errno)); \
+ 	if (x != NULL) \
+ 	 	free(x); \
+ 	return -1; \
+ }//
 
 struct jsocket {
 	struct sockaddr_in si;
+	size_t si_len;
 	// struct sockaddr_rc sr;
-	int socket;
-	int port; 
-
+	union {
+		int socket;
+		int client;
+	};
+	int port;
+	int type;
+	int role;
 } jsocket;
 
 #ifdef __cplusplus
@@ -61,7 +69,9 @@ extern "C" {
 #endif
 	int jnet_init(struct jsocket **sck, int type);
 	int jnet_prep(struct jsocket **sck, int role, int *port, char *addr);
-
+	int jnet_done(struct jsocket **sck);
+	int jnet_send(struct jsocket **sck, char **msg);
+	int jnet_recv(struct jsocket **sck, char **buf, size_t len);
 #ifdef __cplusplus
 }
 #endif
