@@ -20,14 +20,18 @@
 LOCAL_PATH:= $(call my-dir)
 
 #------------------------------------------------------------------------------
+# control variables
+#------------------------------------------------------------------------------
+WITH_JPERF := true
+WITH_ZMQ := true
+# WITH_PERF := true
+WITH_CJSON := true
+
+#------------------------------------------------------------------------------
 # shared library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 LOCAL_MODULE := libjoseph
-
-WITH_ZMQ := true
-# WITH_PERF := true
-WITH_CJSON := true
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
@@ -36,9 +40,9 @@ else ifeq ($(TARGET_PRODUCT), full_mako)
 endif
 
 LOCAL_SRC_FILES := \
-	libjoseph.c \
 	joseph_utils.c \
-	joseph_perf.c
+	joseph_perf.c \
+	joseph_net.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
@@ -52,7 +56,6 @@ LOCAL_SHARED_LIBRARIES += \
 
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
-	-DJPERF_ENABLE=1 \
 	-Wno-format-contains-nul
 
 LOCAL_LDLIBS += \
@@ -60,11 +63,12 @@ LOCAL_LDLIBS += \
 	-ldl \
 	-lstdc++
 
-# LOCAL_EXPORT_CFLAGS += \
-# 	-DJPERF_ENABLE=1
-
 LOCAL_MODULE_TAGS := optional
 LOCAL_PRELINK_MODULE := false
+
+ifeq ($(WITH_JPERF), true)
+	LOCAL_CFLAGS += -DJPERF_ENABLE=1
+endif
 
 ifeq ($(WITH_ZMQ),true)
 	LOCAL_CFLAGS += -DWITH_ZMQ
@@ -94,15 +98,79 @@ endif
 include $(BUILD_SHARED_LIBRARY)
 
 #------------------------------------------------------------------------------
+# static library
+#------------------------------------------------------------------------------
+include $(CLEAR_VARS)
+LOCAL_MODULE := stljoseph
+
+ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+else ifeq ($(TARGET_PRODUCT), full_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+endif
+
+LOCAL_SRC_FILES := \
+	joseph_utils.c \
+	joseph_perf.c \
+	joseph_net.c
+
+LOCAL_C_INCLUDES += \
+	$(LOCAL_PATH)/include
+
+LOCAL_STATIC_LIBRARIES += \
+	libcutils \
+	libutils \
+	libc \
+	liblog
+
+LOCAL_CFLAGS += \
+	-DANDROID=1 \
+	-Wno-format-contains-nul
+
+LOCAL_LDLIBS += \
+	-llog \
+	-ldl \
+	-lstdc++
+
+LOCAL_MODULE_TAGS := optional
+LOCAL_PRELINK_MODULE := false
+
+ifeq ($(WITH_JPERF), true)
+	LOCAL_CFLAGS += -DJPERF_ENABLE=1
+endif
+
+ifeq ($(WITH_ZMQ),true)
+	LOCAL_CFLAGS += -DWITH_ZMQ
+	LOCAL_C_INCLUDES += \
+		external/zmq/zmq4.x/include
+	LOCAL_STATIC_LIBRARIES += \
+		stlzmq
+	include external/stlport/libstlport.mk
+endif
+
+ifeq ($(WITH_PERF),true)
+	LOCAL_CFLAGS += -DWITH_PERF
+	LOCAL_C_INCLUDES += \
+		external/linux-tools-perf/perf-3.12.0/include
+	LOCAL_STATIC_LIBRARIES += \
+		libperf
+endif
+
+ifeq ($(WITH_CJSON), true)
+	LOCAL_CFLAGS += -DWITH_CJSON
+	LOCAL_C_INCLUDES += \
+		external/libcjson
+	LOCAL_STATIC_LIBRARIES += \
+		stlcjson
+endif
+
+include $(BUILD_STATIC_LIBRARY)
+
+#------------------------------------------------------------------------------
 # executable
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
 LOCAL_MODULE := joseph
-
-WITH_JPERF := true
-WITH_ZMQ := true
-# WITH_PERF := true
-WITH_CJSON := true
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
@@ -113,11 +181,11 @@ endif
 LOCAL_SRC_FILES := \
 	libjoseph.c \
 	joseph_utils.c \
-	joseph_perf.c
+	joseph_perf.c \
+	joseph_net.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
-	# external/curl/include \
 
 LOCAL_SHARED_LIBRARIES += \
 	libcutils \
@@ -127,7 +195,6 @@ LOCAL_SHARED_LIBRARIES += \
 
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
-	-DJPERF_ENABLE=1 \
 	-Wno-format-contains-nul
 
 LOCAL_LDLIBS += \
@@ -137,6 +204,10 @@ LOCAL_LDLIBS += \
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_PRELINK_MODULE := false
+
+ifeq ($(WITH_JPERF), true)
+	LOCAL_CFLAGS += -DJPERF_ENABLE=1
+endif
 
 ifeq ($(WITH_ZMQ),true)
 	LOCAL_CFLAGS += -DWITH_ZMQ

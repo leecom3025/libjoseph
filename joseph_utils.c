@@ -21,9 +21,6 @@
 // /sys/devices/system/cpu/cpu0/cpufreq/cpu_utilization
 // /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
 
-//APQ8064 - Nexus 4
-//MSM8974 - Nexus 5
- 
 #ifdef PRODUCT
  static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
 #else 

@@ -108,5 +108,13 @@ int main (int argc, char* argv[]) {
 	Joseph_readCPU_both_free(&utils, &freqs);
 #endif
 
+
+	printf("====== joseph_net test ======\n");
+	struct jsocket *sck;
+	int port = 30331;
+	jnet_init(&sck, JNET_TCP);
+	jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1");
+
+
 	return 0;
 }

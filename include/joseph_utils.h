@@ -23,13 +23,9 @@
 #include <sys/time.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
-#include <sys/socket.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/resource.h>
-#include <netinet/in.h>
-#include <netdb.h>
-#include <arpa/inet.h>
 
 #include "joseph_common.h"
 

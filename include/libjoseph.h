@@ -16,6 +16,8 @@
 
 #include "joseph_utils.h"
 #include "joseph_perf.h"
+#include "joseph_net.h"
+
 #include <jni.h>
 
 /* Code names */
