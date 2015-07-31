@@ -30,7 +30,8 @@
 	#define JLE(...) ((void)ALOG(LOG_ERROR, "libJoseph", __VA_ARGS__))
 	#define JLW(...) ((void)ALOG(LOG_WARN, "libJoseph", __VA_ARGS__))
  	#define JFD(...) \
- 		((void)ALOG(LOG_DEBUG, "libjoseph", "(%s) %s\n", __FUNCTION__, __VA_ARGS__ ))
+ 		((void)ALOG(LOG_DEBUG, "libjoseph", "(%s) %s\n", \
+ 			__FUNCTION__, __VA_ARGS__ ))
 #else
 	#define DEFAULT_PATH "/tmp/joseph"
  	#define JLD(...) (printf(__VA_ARGS__))
