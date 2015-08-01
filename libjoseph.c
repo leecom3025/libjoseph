@@ -139,15 +139,13 @@ int main (int argc, char* argv[]) {
 			JLE("jnet_recv");
 		if (jnet_done(&sck) < 0)
 			JLE("jnet_done");
-
 		return 0; // kill child
 	} else {
 		JLE("fork() failed");
 		return -1;
 	}
 
-	sleep(2);
-	port = 30332;
+	sleep(1);
 	pid = fork();
 	if (pid > 0) { // parent
 		if (jnet_init(&sck, JNET_UDP) < 0) 
@@ -170,8 +168,6 @@ int main (int argc, char* argv[]) {
 		char *msg = "TEST SUCCESS";
 		if (jnet_send(&sck, &msg) < 0) 
 			JLE("jnet_send");
-		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
-			JLE("jnet_recv");
 		if (jnet_done(&sck) < 0)
 			JLE("jnet_done");
 		return 0; // kill child

@@ -45,7 +45,7 @@
 
 #define JNET_ERR(x) \
  { \
- 	JLE("JNet_Err: %s\n", strerror(errno)); \
+ 	JLE("JNet_Err(%s): %s\n", __FUNCTION__, strerror(errno)); \
  	if (x != NULL) \
  	 	free(x); \
  	return -1; \

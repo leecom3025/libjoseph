@@ -44,7 +44,6 @@ int jnet_init(struct jsocket **sck, int type) {
 		JNET_ERR(ptr);
 
 	setsockopt(ptr->socket, SOL_SOCKET, SO_REUSEADDR, &(ptr->socket), sizeof(int));
-
 	ptr->si_len = sizeof(struct sockaddr_in);
 	memset((void*) &(ptr->si), 0, ptr->si_len);
 	(ptr->si).sin_family = AF_INET;
@@ -126,7 +125,7 @@ int jnet_send(struct jsocket **sck, char **msg) {
 				JNET_ERR(ptr);
 			break;
 		case JNET_UDP:
-			if (sendto(socket, *msg, _len, 0, &_client, ptr->si_len) < 0)
+			if (sendto(socket, *msg, _len, 0, (struct sockaddr*)(&(ptr->si)), ptr->si_len) < 0)
 				JNET_ERR(ptr);
 			break;
 		default:
