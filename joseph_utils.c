@@ -14,22 +14,27 @@
  * limitations under the License.
  */
 
-#include "joseph_utils.h"
+#ifdef X86
+  #include "include/joseph_utils.h"
+#else 
+  #include "joseph_utils.h"
+#endif
 
 // This is for CPU temp, util, freq.
 // /sys/class/thermal/thermal_zone5/temp
 // /sys/devices/system/cpu/cpu0/cpufreq/cpu_utilization
 // /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
 
-#ifdef PRODUCT
+#if defined ANDROID && defined PRODUCT
  static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
-#else 
- static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
-#endif 
+#elif defined ANDROID
+static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
 static const char* CPU_ONLINE   = "/sys/devices/system/cpu/cpu%d/online";
 static const char* CPU_UTIL     = "/sys/devices/system/cpu/cpu%d/cpufreq/cpu_utilization";
 static const char* CPU_FREQ     = "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq";
-
+#elif defined X86
+  #warning TODO:finish x86 thermal monitor support
+#endif 
 
 /*
  * Param: 
@@ -47,7 +52,7 @@ int Joseph_getPath(char *arg, char **result) {
 
   int len = strlen(DEFAULT_PATH);
   if ((len += strlen(arg)) > 255) {
-    JLE("ERROR: %s%d%s", "path is too long (",
+    JLE("ERROR: %s%zu%s", "path is too long (",
      strlen(arg), ")");
     return -1;
   }

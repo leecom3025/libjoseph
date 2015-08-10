@@ -14,10 +14,13 @@
  * limitations under the License.
  */
 
-#include "joseph_net.h"
-
+#ifdef X86
+  #include "include/joseph_net.h"
+#else
+  #include "joseph_net.h"
+#endif
 /*
- *	jnet_int
+ *	jnet_init
  *	jnet_prep
  * 	jnet_send/recv
  * 	jnet_done
@@ -142,6 +145,8 @@ int jnet_recv(struct jsocket **sck, char **buffer, size_t len) {
 
 	struct jsocket *ptr = *sck;
 	int socket = 0;
+  char *_buf;
+  struct sockaddr _client;
 
 	if (ptr->role == JNET_CLIENT || ptr->type == JNET_UDP) {
 		socket = ptr->socket;
@@ -151,12 +156,11 @@ int jnet_recv(struct jsocket **sck, char **buffer, size_t len) {
 		JNET_ERR(ptr);
 	}
 
-	char *_buf = (char*) malloc(len);
-	struct sockaddr _client;
+	_buf = (char*) malloc(len);
 
 	switch (ptr->type) {
 		case JNET_TCP:
-			if (recv(socket, _buf, len, 0) < 0)
+      if (recv(socket, _buf, len, 0) < 0)
 				JNET_ERR(ptr);
 			break;
 		case JNET_UDP:

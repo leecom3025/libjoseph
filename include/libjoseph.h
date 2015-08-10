@@ -18,7 +18,9 @@
 #include "joseph_perf.h"
 #include "joseph_net.h"
 
-#include <jni.h>
+#ifdef ANDROID
+  #include <jni.h>
+#endif
 
 /* Code names */
 #define hammerhead "hammerhead"

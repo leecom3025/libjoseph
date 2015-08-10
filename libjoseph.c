@@ -14,7 +14,11 @@
  * limitations under the License.
  */
 
-#include "libjoseph.h"
+#ifdef X86
+  #include "include/libjoseph.h"
+#else
+  #include "libjoseph.h"
+#endif
 
 int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
@@ -32,7 +36,7 @@ int main (int argc, char* argv[]) {
 		printf("Unknown (%s)!\n", PRODUCT);
 #endif
 
-	JLT("======= joseph_utils test =======");
+  JLT("======= joseph_utils test =======");
 	int int_test, i;
 	char *string_test, *path;
 	double double_test;
@@ -109,7 +113,6 @@ int main (int argc, char* argv[]) {
 	JLT("JTherm passed!");
 #endif
 
-
 	JLT("====== joseph_net test ======");
 	struct jsocket *sck;
 	int port = 30331;
@@ -120,7 +123,7 @@ int main (int argc, char* argv[]) {
 		if (jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
 			JLE("jnet_prep");
 		char *msg;
-		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
+		if (jnet_recv(&sck, &msg, 255) < 0)
 			JLE("jnet_recv");
 		if (jnet_send(&sck, &msg) < 0)
 			JLE("jnet_send");

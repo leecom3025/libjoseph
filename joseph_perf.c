@@ -14,12 +14,16 @@
  * limitations under the License.
  */
 
-#include "joseph_perf.h"
+#ifdef X86
+  #include "include/joseph_perf.h"
+#else
+  #include "joseph_perf.h"
+#endif
 
 const char *puts_model = "Time taken: %lu micro-seconds";
 
 void jperf_usage() {
-#ifndef JPERF_ENABLE
+#if !defined JPERF_ENABLE
 	JLW("%s", "make sure to -DJPERF_ENABLE=1 in cmake_config\n");
 	JLW("%s", "	or #define JPERF_NEABLE 1 in jperf.h\n");
 
@@ -186,7 +190,7 @@ int jperf_record(char* filename, char* at) {
 
 int jperf_adjust() {
 
-#ifdef JPERF_ENABLE
+#if defined JPERF_ENABLE && defined ANDROID
 	int i, j, k, iterate = 20;
 	unsigned long shift = 0;
 	double _shift = 0;

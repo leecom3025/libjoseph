@@ -18,10 +18,16 @@
 	#define _GNU_SOURCE
 #endif
 
-#include <cutils/properties.h>
-#include <android/log.h>
-#include <utils/Log.h>
-#include <log/logger.h>
+#ifdef ANDROID
+  #include <cutils/properties.h>
+  #include <android/log.h>
+  #include <utils/Log.h>
+  #include <log/logger.h>
+#else
+  #include <errno.h>
+  #include <stdio.h>
+  #include <stdint.h>
+#endif
 
 /* define  */
 #ifdef ANDROID
@@ -36,19 +42,19 @@
  	{ \
  		((void)ALOG(LOG_DEBUG, "libJoseph", __VA_ARGS__)); \
   		JLOG("Debug", __VA_ARGS__); \
-  	} //
+  } //
 	#define JLE(...) \
 	{ \
   		((void)ALOG(LOG_ERROR, "libJoseph", __VA_ARGS__)); \
   		JLOG("Error", __VA_ARGS__); \
-  	} //
+  } //
 	#define JLW(...) \
 	{ \
   		((void)ALOG(LOG_WARN, "libJoseph", __VA_ARGS__)); \
   		JLOG("Warming", __VA_ARGS__); \
-  	} //
-  	#define JFD(...) \
-  	{ \
+  } //
+  #define JFD(...) \
+  { \
  		((void)ALOG(LOG_DEBUG, "libjoseph", "(%s) %s\n", \
  			__FUNCTION__, __VA_ARGS__ )); \
  		(printf("FuncDebug(%s): ", __FUNCTION__); \
@@ -62,7 +68,29 @@
  	} //
 #else
 	#define DEFAULT_PATH "/tmp/joseph"
- 	#define JLD(...) (printf(__VA_ARGS__))
- 	#define JLE(...) (printf(__VA_ARGS__))
-  	#define JLW(...) (printf(__VA_ARGS__))
+ 	#define JLD(...) \
+  { \
+     (printf(__VA_ARGS__)); \
+     (printf("\n")); \
+  } //
+ 	#define JLE(...) \
+  { \
+     (printf(__VA_ARGS__)); \
+     (printf("\n")); \
+  } //
+  #define JLW(...) \
+  { \
+     (printf(__VA_ARGS__)); \
+     (printf("\n")); \
+  } //
+  #define JLD(...) \
+  { \
+     (printf(__VA_ARGS__)); \
+     (printf("\n")); \
+  } //
+  #define JLT(...) \
+  { \
+     (printf(__VA_ARGS__)); \
+     (printf("\n")); \
+  } //
 #endif
