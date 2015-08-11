@@ -251,7 +251,8 @@ int Joseph_resetFile(char *arg) {
   return 0;
 }
 
-#ifdef ANDROID /* Thermal unit supported for Android only currently */
+/* Thermal unit supported for Android only currently */
+#if defined ANDROID 
 /* Thermal read/write */
 /*
  * Param: 
@@ -360,7 +361,6 @@ int Joseph_readCPU_allutils(int **mUtil, int *online) {
   for (i = 0; i < CPU_NUM; i++) {
     if (Joseph_readCPU_util(i, &((*tUtil)[i])) > - 1) {
       (*(online))++;
-      // printf("CPU %d: %d\n", i, (*tUtil)[i]);
     }
   } 
 
