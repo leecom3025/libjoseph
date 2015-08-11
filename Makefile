@@ -4,30 +4,35 @@ WARM = -Wall -Wno-unused-variable \
 			 -Wno-unused-but-set-variable \
 			 -Wno-format-contains-nul
 ARCH = -DX86=1
-ENABLE = -DJPERF_ENABLE=1
+ENABLE = -DJPERF_ENABLE=1 \
+				 -DWITH_ZMQ=1
 CFLAGS = $(ARCH) $(ENABLE) \
 				 $(DEBUG) $(WARM)
-LDFLAGS =
+LDFLAGS = -lzmq
 RM= rm -f
 SRC = $(wildcard *.c) 
 OBJ= $(patsubst %.c, %.o, $(SRC))
 EXECUTABLE=libjoseph
 
-.PHONY: clean $(EXECUTABLE)
+.PHONY: all $(EXECUTABLE) clean dir
+
+all: dir $(EXECUTABLE)
 
 $(EXECUTABLE): $(OBJ)
-	    $(CC) $(LDFLAGS) $(OBJ) -o $@
+	    $(CC) $(OBJ) -o $@ $(LDFLAGS)
 			$(RM) $(OBJ) *~
-#			if [ -f /tmp/joseph ] ; \
-			then \
-				rm -rf  /tmp/joseph ; \
-			fi;
-			mkdir /tmp/joseph
-			echo 123 > /tmp/joseph/int_test
-			echo \"This is test message\" > /tmp/joseph/string_test
-			echo 123.456 > /tmp/joseph/double_test
-			echo 123.45 > /tmp/joseph/float_test
 
-clean:
-	     $(RM) $(OBJ) $(EXECUTABLE) *~
-			 rm -rf /tmp/joseph
+
+clean: 
+	$(RM) $(OBJ) $(EXECUTABLE) *~
+	rm -rf /tmp/joseph
+
+dir: 
+	if [ ! -d /tmp/joseph ] ; \
+	then \
+		mkdir /tmp/joseph ; \
+	fi;
+	echo 123 > /tmp/joseph/int_test
+	echo \"This is test message\" > /tmp/joseph/string_test
+	echo 123.456 > /tmp/joseph/double_test
+	echo 123.45 > /tmp/joseph/float_test
