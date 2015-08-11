@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#ifdef X86
+#if defined X86
   #include "include/libjoseph.h"
 #else
   #include "libjoseph.h"
@@ -26,7 +26,7 @@ int main (int argc, char* argv[]) {
 	}
 
 	JLT("Default path is %s", DEFAULT_PATH);
-#ifdef PRODUCT
+#if defined ANDROID && defined PRODUCT
 	printf("Product is ");
 	if (strcmp(PRODUCT, hammerhead) == 0)
 		printf("Nexus 5 (%s)!\n", PRODUCT);
@@ -69,14 +69,14 @@ int main (int argc, char* argv[]) {
 	printf("%ld\n", jperf_time());
 	JLT("JPerf passed!");
 
-#ifdef WITH_ZMQ
+#if defined WITH_ZMQ
 	JLT("======= static_zmq test =======");
 	void *context = zmq_init(1);
 	assert(context != NULL);
 	JLT("ZeroMQ passed");
 #endif
 
-#ifdef WITH_CJSON
+#if defined WITH_CJSON
 	JLT("======= static_cjson test =======");
 	cJSON *root = cJSON_CreateObject();  
 	assert(root != NULL);
@@ -84,7 +84,7 @@ int main (int argc, char* argv[]) {
 #endif
 
 	/* Thermal unit supported for Android only currently */
-#ifdef ANDROID
+#if defined ANDROID
 	JLT("====== joseph_thermal test ======");
 
 	int temperature, online;
