@@ -25,6 +25,7 @@
 /* Code names */
 #define hammerhead "hammerhead"
 #define mako "mako"
+#define togari "togari"
 
 #ifdef WITH_ZMQ
 	#include <zmq.h>

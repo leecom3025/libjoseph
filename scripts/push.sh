@@ -1,4 +1,5 @@
 function init() {
+	adb wait-for-device root && sleep 1 && adb wait-for-device remount
 	if [[ "init" = $1 ]];
 	then
 		adb shell mount -o rw,remount /

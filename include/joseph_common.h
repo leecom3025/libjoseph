@@ -66,6 +66,12 @@
  		((void)ALOG(LOG_DEBUG, "libjoseph_test", __VA_ARGS__)); \
  		JLOG(">>> Test", __VA_ARGS__); \
  	} //
+
+  /* _PRODUCT is internal model number, must be equal to one in Android.mk */
+  #define _hammerhead 1
+  #define _mako 2
+  #define _togari 3
+
 #else
 	#define DEFAULT_PATH "/tmp/joseph"
  	#define JLD(...) \

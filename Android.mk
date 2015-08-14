@@ -35,16 +35,22 @@ LOCAL_MODULE := libjoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
 else ifeq ($(TARGET_PRODUCT), cm_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
 else ifeq ($(TARGET_PRODUCT), full_mako)
 	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
 else ifeq ($(TARGET_PRODUCT), cm_mako)
 	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
 else ifeq ($(TARGET_PRODUCT), full_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
 LOCAL_SRC_FILES := \
@@ -113,8 +119,22 @@ LOCAL_MODULE := stljoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
+else ifeq ($(TARGET_PRODUCT), cm_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
 else ifeq ($(TARGET_PRODUCT), full_mako)
 	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
+else ifeq ($(TARGET_PRODUCT), cm_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
+else ifeq ($(TARGET_PRODUCT), full_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), cm_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
 LOCAL_SRC_FILES := \
@@ -182,8 +202,22 @@ LOCAL_MODULE := joseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
+else ifeq ($(TARGET_PRODUCT), cm_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
 else ifeq ($(TARGET_PRODUCT), full_mako)
 	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
+else ifeq ($(TARGET_PRODUCT), cm_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
+else ifeq ($(TARGET_PRODUCT), full_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), cm_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
 LOCAL_SRC_FILES := \

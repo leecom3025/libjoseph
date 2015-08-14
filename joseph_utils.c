@@ -284,9 +284,10 @@ int Joseph_resetFile(char *arg) {
 int Joseph_readCPU_temp(int cpu, int *mTemp) {
   FILE *pFile;
   char *mFileName;
+  int cnum = CPU_OFFSET + cpu;
 
   mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(int));
-  sprintf(mFileName, CPU_TEMP, cpu);
+  sprintf(mFileName, CPU_TEMP, cnum);
 
   setpriority(PRIO_PROCESS, 0, -20);
   if ((pFile = fopen(mFileName, "r")) == NULL) { 
@@ -294,10 +295,27 @@ int Joseph_readCPU_temp(int cpu, int *mTemp) {
     return -1;
   }
 
-  fscanf(mFileName, "%d", mTemp);
+  fscanf(pFile, "%d", mTemp);
   fclose(pFile);
 
   free(mFileName);
+  return 0;
+}
+
+int Joseph_readCPU_alltemps(int **mTemp) {
+  int (*tTemp)[CPU_NUM];
+  int i;
+
+  tTemp = malloc(sizeof(int32_t) * CPU_NUM);
+  for (i = 0; i < CPU_NUM; i++) {
+    Joseph_readCPU_temp(i, &((*tTemp)[i]));
+  }
+  *mTemp = *tTemp;
+  return 0;
+}
+
+int Joseph_readCPU_alltemps_free(int **mTemp) {
+  free(mTemp);
   return 0;
 }
 

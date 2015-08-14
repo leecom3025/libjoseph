@@ -68,10 +68,27 @@ extern "C" {
 		thermal_zone8 	- cpu3
 	*/
 	#ifdef ANDROID /* Thermal unit supported for Android only currently */
+		#if _PRODUCT == _hammerhead
+			#define CPU_OFFSET 6
+			#define _CPU_NUM 4
+		#elif _PRODUCT == _mako
+			#define CPU_OFFSET 7
+			#define _CPU_NUM 4
+		#elif _PRODUCT == _togari
+			#define CPU_OFFSET 5
+			#define _CPU_NUM 4
+		#else
+			#define CPU_OFFSET 0
+			#define _CPU_NUM 1
+		#endif 
+	
 	/* Thermal read/write */
-	static const int CPU_NUM = 4;
+	static const int CPU_NUM = _CPU_NUM;
 
 	int Joseph_readCPU_temp(int cpu, int *mTemp);
+	int Joseph_readCPU_alltemps(int **mTemp);
+	int Joseph_readCPU_alltemps_free(int **mTemp);
+	
 	int Joseph_readCPU_util(int cpu, int *mUtil);
 	int Joseph_readCPU_allutils(int **mUtil, int *online);
 	int Joseph_readCPU_freq(int cpu, int *mFreq);

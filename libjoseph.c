@@ -87,11 +87,14 @@ int main (int argc, char* argv[]) {
 #if defined ANDROID
 	JLT("====== joseph_thermal test ======");
 
-	int temperature, online;
-	int *utils, *freqs;
+	int online, kk;
+	int *temperature, *utils, *freqs;
 
-	Joseph_readCPU_temp(&temperature);
-	printf("Temperature: %d\n", temperature);
+	Joseph_readCPU_alltemps(&temperature);
+	for (i = 0; i < CPU_NUM; i++) {
+		printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
+	}
+	Joseph_readCPU_alltemps_free(&temperature);
 
 	Joseph_readCPU_allutils(&utils, &online);
 	for (i = 0; i < online; i++) {
