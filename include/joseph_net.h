@@ -51,7 +51,7 @@
  	return -1; \
  }//
 
-struct jsocket {
+struct Jsocket {
 	struct sockaddr_in si;
 	size_t si_len;
 	// struct sockaddr_rc sr;
@@ -62,16 +62,16 @@ struct jsocket {
 	int port;
 	int type;
 	int role;
-} jsocket;
+} Jsocket;
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-	int jnet_init(struct jsocket **sck, int type);
-	int jnet_prep(struct jsocket **sck, int role, int *port, char *addr);
-	int jnet_done(struct jsocket **sck);
-	int jnet_send(struct jsocket **sck, char **msg);
-	int jnet_recv(struct jsocket **sck, char **buf, size_t len);
+	int Jnet_init(struct Jsocket **sck, int type);
+	int Jnet_prep(struct Jsocket **sck, int role, int *port, char *addr);
+	int Jnet_done(struct Jsocket **sck);
+	int Jnet_send(struct Jsocket **sck, char **msg);
+	int Jnet_recv(struct Jsocket **sck, char **buf, size_t len);
 #ifdef __cplusplus
 }
 #endif

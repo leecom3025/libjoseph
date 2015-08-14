@@ -35,8 +35,16 @@ LOCAL_MODULE := libjoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+else ifeq ($(TARGET_PRODUCT), cm_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
 else ifeq ($(TARGET_PRODUCT), full_mako)
 	LOCAL_CFLAGS += -DPRODUCT="mako"
+else ifeq ($(TARGET_PRODUCT), cm_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+else ifeq ($(TARGET_PRODUCT), full_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
+else ifeq ($(TARGET_PRODUCT), cm_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
 endif
 
 LOCAL_SRC_FILES := \

@@ -20,21 +20,21 @@
   #include "joseph_net.h"
 #endif
 /*
- *	jnet_init
- *	jnet_prep
- * 	jnet_send/recv
- * 	jnet_done
+ *	Jnet_init
+ *	Jnet_prep
+ * 	Jnet_send/recv
+ * 	Jnet_done
  *
  */ 
 
 /* 
  * 
  */
-int jnet_init(struct jsocket **sck, int type) {
+int Jnet_init(struct Jsocket **sck, int type) {
 	if (sck == NULL || type < 0)
 		return -1;
 
-	struct jsocket *ptr = malloc(sizeof(jsocket));
+	struct Jsocket *ptr = malloc(sizeof(Jsocket));
 	ptr->type = type;
 
 	int socket_type = 0;
@@ -60,11 +60,11 @@ int jnet_init(struct jsocket **sck, int type) {
  *
  * 
  */ 
-int jnet_prep(struct jsocket **sck, int role, int *port, char *addr) {
+int Jnet_prep(struct Jsocket **sck, int role, int *port, char *addr) {
 	if (sck == NULL || role < 0 || port == NULL || *port < 0)
 		return -1;
 
-	struct jsocket *ptr = *sck;
+	struct Jsocket *ptr = *sck;
 	ptr->role = role;
 	(ptr->si).sin_port = htons(*port);
 
@@ -81,12 +81,14 @@ int jnet_prep(struct jsocket **sck, int role, int *port, char *addr) {
 			struct sockaddr _client;
 			if (listen(ptr->socket, 0xF) < 0) /* it will accept only one client */
 				JNET_ERR(ptr);
-			if ( (ptr->client = accept(ptr->socket, &_client, (socklen_t*)&(ptr->si_len))) < 0 )
+			if ( (ptr->client = accept(ptr->socket, &_client, 
+					(socklen_t*)&(ptr->si_len))) < 0 )
 				JNET_ERR(ptr);
 		}
 	} else if ((role & JNET_CLIENT)) {
 		if (ptr->type == JNET_TCP) {
-			if (connect(ptr->socket, (struct sockaddr*)(&(ptr->si)), ptr->si_len) < 0) 
+			if (connect(ptr->socket, (struct sockaddr*)(&(ptr->si)), 
+				ptr->si_len) < 0) 
 				JNET_ERR(ptr);
 		}
 	}
@@ -94,8 +96,8 @@ int jnet_prep(struct jsocket **sck, int role, int *port, char *addr) {
 	return 0;
 }
 
-int jnet_done(struct jsocket **sck) {
-	struct jsocket *ptr = *sck;
+int Jnet_done(struct Jsocket **sck) {
+	struct Jsocket *ptr = *sck;
 
 	if (ptr->socket > 0) 
 		close(ptr->socket);
@@ -106,11 +108,11 @@ int jnet_done(struct jsocket **sck) {
 	return 0;
 }
 
-int jnet_send(struct jsocket **sck, char **msg) {
+int Jnet_send(struct Jsocket **sck, char **msg) {
 	if (sck == NULL || msg == NULL)
 		return -1;
 
-	struct jsocket *ptr = *sck;
+	struct Jsocket *ptr = *sck;
 	int socket = 0;
 	if (ptr->role == JNET_CLIENT || ptr->type == JNET_UDP) {
 		socket = ptr->socket;
@@ -128,7 +130,8 @@ int jnet_send(struct jsocket **sck, char **msg) {
 				JNET_ERR(ptr);
 			break;
 		case JNET_UDP:
-			if (sendto(socket, *msg, _len, 0, (struct sockaddr*)(&(ptr->si)), ptr->si_len) < 0)
+			if (sendto(socket, *msg, _len, 0, (struct sockaddr*)(&(ptr->si)),
+				ptr->si_len) < 0)
 				JNET_ERR(ptr);
 			break;
 		default:
@@ -139,14 +142,14 @@ int jnet_send(struct jsocket **sck, char **msg) {
 } 
 
 
-int jnet_recv(struct jsocket **sck, char **buffer, size_t len) {
+int Jnet_recv(struct Jsocket **sck, char **buffer, size_t len) {
 	if (sck == NULL || buffer == NULL || len == 0)
 		return -1;
 
-	struct jsocket *ptr = *sck;
+	struct Jsocket *ptr = *sck;
 	int socket = 0;
-  char *_buf;
-  struct sockaddr _client;
+	char *_buf;
+	struct sockaddr _client;
 
 	if (ptr->role == JNET_CLIENT || ptr->type == JNET_UDP) {
 		socket = ptr->socket;

@@ -48,6 +48,23 @@ extern "C" {
 	int Joseph_appendString(char *arg, char **value);
 	int Joseph_resetFile(char *arg);
 
+	/* 
+	Nexus 5:
+		thermal_zone6 	- cpu0 
+		thermal_zone7 	- cpu1
+		thermal_zone8 	- cpu2
+		thermal_zone9 	- cpu3
+	Nexus 4:
+		thermal_zone7 	- cpu0
+		thermal_zone8 	- cpu1
+		thermal_zone9 	- cpu2
+		thermal_zone10 	- cpu3
+	Togari:
+		thermal_zone5 	- cpu0 
+		thermal_zone6 	- cpu1
+		thermal_zone7 	- cpu2
+		thermal_zone8 	- cpu3
+	*/
 	#ifdef ANDROID /* Thermal unit supported for Android only currently */
 	/* Thermal read/write */
 	static const int CPU_NUM = 4;

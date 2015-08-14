@@ -114,34 +114,34 @@ int main (int argc, char* argv[]) {
 #endif
 
 	JLT("====== joseph_net test ======");
-	struct jsocket *sck;
+	struct Jsocket *sck;
 	int port = 30331;
 	int pid = fork();
 	if (pid > 0) { // parent
-		if (jnet_init(&sck, JNET_TCP) < 0) 
-			JLE("jnet_init");
-		if (jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
-			JLE("jnet_prep");
+		if (Jnet_init(&sck, JNET_TCP) < 0) 
+			JLE("Jnet_init");
+		if (Jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
+			JLE("Jnet_prep");
 		char *msg;
-		if (jnet_recv(&sck, &msg, 255) < 0)
-			JLE("jnet_recv");
-		if (jnet_send(&sck, &msg) < 0)
-			JLE("jnet_send");
-		if (jnet_done(&sck) < 0)
-			JLE("jnet_done");
-		JLT("JNET_TCP passed!");
+		if (Jnet_recv(&sck, &msg, 255) < 0)
+			JLE("Jnet_recv");
+		if (Jnet_send(&sck, &msg) < 0)
+			JLE("Jnet_send");
+		if (Jnet_done(&sck) < 0)
+			JLE("Jnet_done");
+		JLT("Jnet_TCP passed!");
 	} else if (pid == 0) { // child 
-		if (jnet_init(&sck, JNET_TCP) < 0) 
-			JLE("jnet_init");
-		if (jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
-			JLE("jnet_prep");
+		if (Jnet_init(&sck, JNET_TCP) < 0) 
+			JLE("Jnet_init");
+		if (Jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
+			JLE("Jnet_prep");
 		char *msg = "TEST SUCCESS";
-		if (jnet_send(&sck, &msg) < 0) 
-			JLE("jnet_send");
-		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
-			JLE("jnet_recv");
-		if (jnet_done(&sck) < 0)
-			JLE("jnet_done");
+		if (Jnet_send(&sck, &msg) < 0) 
+			JLE("Jnet_send");
+		if (Jnet_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("Jnet_recv");
+		if (Jnet_done(&sck) < 0)
+			JLE("Jnet_done");
 		return 0; // kill child
 	} else {
 		JLE("fork() failed");
@@ -151,28 +151,28 @@ int main (int argc, char* argv[]) {
 	sleep(1);
 	pid = fork();
 	if (pid > 0) { // parent
-		if (jnet_init(&sck, JNET_UDP) < 0) 
-			JLE("jnet_init");
-		if (jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
-			JLE("jnet_prep");
+		if (Jnet_init(&sck, JNET_UDP) < 0) 
+			JLE("Jnet_init");
+		if (Jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
+			JLE("Jnet_prep");
 		char *msg;
-		if (jnet_recv(&sck, &msg, strlen(msg)) < 0)
-			JLE("jnet_recv");
-		if (jnet_send(&sck, &msg) < 0)
-			JLE("jnet_send");
-		if (jnet_done(&sck) < 0)
-			JLE("jnet_done");
-		JLT("JNET_UDP passed!");
+		if (Jnet_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("Jnet_recv");
+		if (Jnet_send(&sck, &msg) < 0)
+			JLE("Jnet_send");
+		if (Jnet_done(&sck) < 0)
+			JLE("Jnet_done");
+		JLT("Jnet_UDP passed!");
 	} else if (pid == 0) { // child 
-		if (jnet_init(&sck, JNET_UDP) < 0) 
-			JLE("jnet_init");
-		if (jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
-			JLE("jnet_prep");
+		if (Jnet_init(&sck, JNET_UDP) < 0) 
+			JLE("Jnet_init");
+		if (Jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
+			JLE("Jnet_prep");
 		char *msg = "TEST SUCCESS";
-		if (jnet_send(&sck, &msg) < 0) 
-			JLE("jnet_send");
-		if (jnet_done(&sck) < 0)
-			JLE("jnet_done");
+		if (Jnet_send(&sck, &msg) < 0) 
+			JLE("Jnet_send");
+		if (Jnet_done(&sck) < 0)
+			JLE("Jnet_done");
 		return 0; // kill child
 	} else {
 		JLE("fork() failed");

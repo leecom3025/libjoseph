@@ -20,18 +20,23 @@
   #include "joseph_utils.h"
 #endif
 
-// This is for CPU temp, util, freq.
-// /sys/class/thermal/thermal_zone5/temp
-// /sys/devices/system/cpu/cpu0/cpufreq/cpu_utilization
-// /sys/devices/system/cpu/cpu0/cpufreq/cpuinfo_cur_freq
+#if defined ANDROID
+static const char* CPU_ONLINE
+  = "/sys/devices/system/cpu/cpu%d/online";
+static const char* CPU_UTIL
+  = "/sys/devices/system/cpu/cpu%d/cpufreq/cpu_utilization";
+static const char* CPU_FREQ
+  = "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq";
+#elif defined X86
+  #warning TODO: finish x86 CPU monitor support
+#endif 
 
 #if defined ANDROID && defined PRODUCT
- static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
+static const char *CPU_TEMP 
+  = "/sys/class/thermal/thermal_zone5/temp";
 #elif defined ANDROID
-static const char* CPU_TEMP     = "/sys/class/thermal/thermal_zone5/temp";
-static const char* CPU_ONLINE   = "/sys/devices/system/cpu/cpu%d/online";
-static const char* CPU_UTIL     = "/sys/devices/system/cpu/cpu%d/cpufreq/cpu_utilization";
-static const char* CPU_FREQ     = "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq";
+static const char *CPU_TEMP
+  = "/sys/class/thermal/thermal_zone5/temp";
 #elif defined X86
   #warning TODO:finish x86 thermal monitor support
 #endif 
