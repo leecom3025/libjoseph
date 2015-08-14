@@ -49,17 +49,19 @@ extern "C" {
 	int Joseph_resetFile(char *arg);
 
 	/* 
-	Nexus 5:
+	(CPU_OFFSET | CPU)
+	
+	Nexus 5: (6 | cpu) 
 		thermal_zone6 	- cpu0 
 		thermal_zone7 	- cpu1
 		thermal_zone8 	- cpu2
 		thermal_zone9 	- cpu3
-	Nexus 4:
+	Nexus 4: (7 | cpu)
 		thermal_zone7 	- cpu0
 		thermal_zone8 	- cpu1
 		thermal_zone9 	- cpu2
 		thermal_zone10 	- cpu3
-	Togari:
+	Togari: (5 | cpu)
 		thermal_zone5 	- cpu0 
 		thermal_zone6 	- cpu1
 		thermal_zone7 	- cpu2
@@ -69,7 +71,7 @@ extern "C" {
 	/* Thermal read/write */
 	static const int CPU_NUM = 4;
 
-	int Joseph_readCPU_temp(int *mTemp);
+	int Joseph_readCPU_temp(int cpu, int *mTemp);
 	int Joseph_readCPU_util(int cpu, int *mUtil);
 	int Joseph_readCPU_allutils(int **mUtil, int *online);
 	int Joseph_readCPU_freq(int cpu, int *mFreq);

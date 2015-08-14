@@ -33,10 +33,10 @@ static const char* CPU_FREQ
 
 #if defined ANDROID && defined PRODUCT
 static const char *CPU_TEMP 
-  = "/sys/class/thermal/thermal_zone5/temp";
+  = "/sys/class/thermal/thermal_zone%d/temp";
 #elif defined ANDROID
 static const char *CPU_TEMP
-  = "/sys/class/thermal/thermal_zone5/temp";
+  = "/sys/class/thermal/thermal_zone%d/temp";
 #elif defined X86
   #warning TODO:finish x86 thermal monitor support
 #endif 
@@ -267,17 +267,37 @@ int Joseph_resetFile(char *arg) {
  *  if (Joseph_readCPU_temp(&temp) < 0)
  *    perror(strerror(errno));
  */
-int Joseph_readCPU_temp(int *mTemp) {
-  FILE *pFile;
+// int Joseph_readCPU_temp(int *mTemp) {
+//   FILE *pFile;
+
+//   setpriority(PRIO_PROCESS, 0, -20);
+//   if ((pFile = fopen(CPU_TEMP, "r")) == NULL) { 
+//     JLE("ERROR: %s", strerror(errno));
+//     return -1;
+//   }
+
+//   fscanf(pFile, "%d", mTemp);
+//   fclose(pFile);
+//   return 0;
+// }
+
+int Joseph_readCPU_temp(int cpu, int *mTemp) {
+  FILE *pFILE;
+  char *mFileName;
+
+  mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(int));
+  sprintf(mFileName, CPU_TEMP, cpu);
 
   setpriority(PRIO_PROCESS, 0, -20);
-  if ((pFile = fopen(CPU_TEMP, "r")) == NULL) { 
+  if ((pFile = fopen(mFileName, "r")) == NULL) { 
     JLE("ERROR: %s", strerror(errno));
     return -1;
   }
 
-  fscanf(pFile, "%d", mTemp);
+  fscanf(mFileName, "%d", mTemp);
   fclose(pFile);
+
+  free(mFileName);
   return 0;
 }
 
