@@ -282,7 +282,7 @@ int Joseph_resetFile(char *arg) {
 // }
 
 int Joseph_readCPU_temp(int cpu, int *mTemp) {
-  FILE *pFILE;
+  FILE *pFile;
   char *mFileName;
 
   mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(int));
