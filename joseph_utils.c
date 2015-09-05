@@ -41,6 +41,10 @@ static const char *CPU_TEMP
   #warning TODO:finish x86 thermal monitor support
 #endif 
 
+
+#if defined HOST_ANDROID
+  #define TORH_ANDROID 1
+#endif
 /*
  * Param: 
  *  (filename, pointer to char)
@@ -50,6 +54,9 @@ static const char *CPU_TEMP
  *    perror(strerror(errno));
  */
 int Joseph_getPath(char *arg, char **result) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   if (arg == NULL) {
     JLE("ERROR: %s", "arg is NULL");
     return -1;
@@ -76,6 +83,9 @@ int Joseph_getPath(char *arg, char **result) {
  *		perror(strerror(errno));
  */
 int Joseph_getInt(char *arg, int *data) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE *fd;
   char *path;
 
@@ -94,6 +104,9 @@ int Joseph_getInt(char *arg, int *data) {
 }
 
 int Joseph_getString(char *arg, char **result) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   int fd;
   char *path;
   char mTemp[256];
@@ -117,6 +130,9 @@ int Joseph_getString(char *arg, char **result) {
 }
 
 int Joseph_getDouble(char *arg, double *data){
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE *fd;
   char *path;
 
@@ -136,6 +152,9 @@ int Joseph_getDouble(char *arg, double *data){
 }
 
 int Joseph_getFloat(char *arg, float *data){
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE *fd;
   char *path;
 
@@ -155,6 +174,9 @@ int Joseph_getFloat(char *arg, float *data){
 }
 
 int Joseph_setInt(char *arg, int value) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE* fd;
   char *path;
 
@@ -172,6 +194,9 @@ int Joseph_setInt(char *arg, int value) {
 }
 
 int Joseph_setString(char *arg, char *value) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE* fd;
   char *path;
 
@@ -189,6 +214,9 @@ int Joseph_setString(char *arg, char *value) {
 }
 
 int Joseph_setDouble(char *arg, double value) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
 	FILE* fd;
   char *path;
 
@@ -206,6 +234,9 @@ int Joseph_setDouble(char *arg, double value) {
 }
 
 int Joseph_setFloat(char *arg, float value) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE* fd;
   char *path;
 
@@ -223,6 +254,9 @@ int Joseph_setFloat(char *arg, float value) {
 }
 
 int Joseph_appendString(char *arg, char **value) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE* fd;
   char *path;
 
@@ -240,6 +274,9 @@ int Joseph_appendString(char *arg, char **value) {
 }
 
 int Joseph_resetFile(char *arg) {
+#if defined HOST_ANDROID
+  return 0;
+#endif
   FILE* fd;
   char *path;
 
@@ -282,6 +319,7 @@ int Joseph_resetFile(char *arg) {
 // }
 
 int Joseph_readCPU_temp(int cpu, int *mTemp) {
+#ifndef HOST_ANDROID
   FILE *pFile;
   char *mFileName;
   int cnum = CPU_OFFSET + cpu;
@@ -299,6 +337,9 @@ int Joseph_readCPU_temp(int cpu, int *mTemp) {
   fclose(pFile);
 
   free(mFileName);
+#else
+  *mTemp = cpu;
+#endif
   return 0;
 }
 

@@ -20,12 +20,50 @@
   #include "libjoseph.h"
 #endif
 
+void *threadFunc(void *arg)
+{
+	volatile int i=0; 
+	int j=0;
+	while(i<100000)
+	{
+		j=i%4827;
+		i++;
+		// printf("%d", i);
+	}
+	j++;
+  int *t;
+  int n;
+  Joseph_readCPU_alltemps(&t);
+	for (n = 0; n < 4; n++) {
+    printf("CPU%d: %d, ", n, t[n]);
+  }
+  printf("\n");
+  return NULL;
+}
+
 int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
 
-	JLT("Default path is %s", DEFAULT_PATH);
+	while(1)
+	{
+		usleep(2500);
+		int threads=0;
+		int thread_num = 50;
+		pthread_t pth[thread_num];
+
+		for(;threads<thread_num;threads++)
+		{
+			pth[threads] = (pthread_t*) malloc(sizeof(pthread_t));
+			pthread_create(&pth[threads],NULL,threadFunc,"processing...");
+		}
+
+		printf("main waiting for thread to terminate...\n");
+		for (threads = 0; threads < thread_num; threads++ )
+			pthread_join(pth[threads],NULL);
+	}
+#if 0
 #if defined ANDROID && defined PRODUCT
 	printf("Product is ");
 	if (strcmp(PRODUCT, hammerhead) == 0)
@@ -180,6 +218,6 @@ int main (int argc, char* argv[]) {
 	} else {
 		JLE("fork() failed");
 	}
-
+#endif
 	return 0;
 }

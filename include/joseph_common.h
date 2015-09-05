@@ -22,7 +22,8 @@
   #include <cutils/properties.h>
   #include <android/log.h>
   #include <utils/Log.h>
-  #include <log/logger.h>
+  #include <cutils/logger.h>
+  #include <errno.h>
 #else
   #include <errno.h>
   #include <stdio.h>

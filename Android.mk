@@ -19,13 +19,15 @@
 
 LOCAL_PATH:= $(call my-dir)
 
+$(info Joseph said... \"Building for $(TARGET_PRODUCT)\")
+
 #------------------------------------------------------------------------------
 # control variables
 #------------------------------------------------------------------------------
-WITH_JPERF := true
-WITH_ZMQ := true
+#WITH_JPERF := true
+#WITH_ZMQ := true
 # WITH_PERF := true
-WITH_CJSON := true
+#WITH_CJSON := true
 
 #------------------------------------------------------------------------------
 # shared library
@@ -59,7 +61,8 @@ LOCAL_SRC_FILES := \
 	joseph_net.c
 
 LOCAL_C_INCLUDES += \
-	$(LOCAL_PATH)/include
+	$(LOCAL_PATH)/include \
+	system/core/include 
 	# external/curl/include \
 
 LOCAL_SHARED_LIBRARIES += \
@@ -70,7 +73,10 @@ LOCAL_SHARED_LIBRARIES += \
 
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
-	-Wno-format-contains-nul
+	-Wno-format-contains-nul \
+	-DDEVICE_ANDROID=1
+
+$(info $(TARGET_ARCH) == $(HOST_ARCH) for device?)
 
 LOCAL_LDLIBS += \
 	-llog \
@@ -146,15 +152,17 @@ LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
 	# external/curl/include \
 
-LOCAL_SHARED_LIBRARIES += \
+LOCAL_STATIC_LIBRARIES += \
 	libcutils \
 	libutils \
-	libc \
 	liblog
 
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
-	-Wno-format-contains-nul
+	-Wno-format-contains-nul \
+	-DHOST_ANDROID=1
+
+$(info $(TARGET_ARCH) == $(HOST_ARCH))
 
 LOCAL_LDLIBS += \
 	-llog \
@@ -229,8 +237,10 @@ LOCAL_SRC_FILES := \
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
 
+LOCAL_SHARED_LIBRARIES += \
+	libcutils
+
 LOCAL_STATIC_LIBRARIES += \
-	libcutils \
 	libutils \
 	libc \
 	liblog
@@ -310,12 +320,12 @@ LOCAL_SRC_FILES := \
 	joseph_net.c
 
 LOCAL_C_INCLUDES += \
-	$(LOCAL_PATH)/include
+	$(LOCAL_PATH)/include \
+	system/core/include
 
-LOCAL_STATIC_LIBRARIES += \
+LOCAL_SHARED_LIBRARIES += \
 	libcutils \
 	libutils \
-	libc \
 	liblog
 
 LOCAL_CFLAGS += \
@@ -400,7 +410,6 @@ LOCAL_C_INCLUDES += \
 LOCAL_SHARED_LIBRARIES += \
 	libcutils \
 	libutils \
-	libc \
 	liblog
 
 LOCAL_CFLAGS += \
@@ -410,7 +419,8 @@ LOCAL_CFLAGS += \
 LOCAL_LDLIBS += \
 	-llog \
 	-ldl \
-	-lstdc++
+	-lstdc++ \
+	-lpthread
 
 LOCAL_MODULE_TAGS := optional
 LOCAL_PRELINK_MODULE := false
