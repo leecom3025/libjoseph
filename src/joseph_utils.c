@@ -15,7 +15,7 @@
  */
 
 #ifdef X86
-  #include "include/joseph_utils.h"
+  #include "../include/joseph_utils.h"
 #else 
   #include "joseph_utils.h"
 #endif
@@ -308,6 +308,12 @@ done:
   return 0;
 }
 
+/*
+ * Usage:
+ *  int *temp;
+ *  if (Joseph_readCPU_alltemps(&temp) < 0)
+ *    perror(strerror(errno));
+ */
 int Joseph_readCPU_alltemps(int **mTemp) {
   int (*tTemp)[CPU_NUM];
   int i;

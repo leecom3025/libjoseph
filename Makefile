@@ -8,10 +8,10 @@ ENABLE = -DJPERF_ENABLE=1 \
 				 -DWITH_ZMQ=1
 CFLAGS = $(ARCH) $(ENABLE) \
 				 $(DEBUG) $(WARM)
-LDFLAGS = -lzmq
-RM= rm -f
-SRC = $(wildcard *.c) 
-OBJ= $(patsubst %.c, %.o, $(SRC))
+#LDFLAGS = -lzmq
+RM = rm -f
+SRC = $(wildcard src/*.c) 
+OBJ = $(patsubst %.c, %.o, $(SRC))
 EXECUTABLE=libjoseph
 
 .PHONY: all $(EXECUTABLE) clean dir
@@ -21,7 +21,6 @@ all: dir $(EXECUTABLE)
 $(EXECUTABLE): $(OBJ)
 	    $(CC) $(OBJ) -o $@ $(LDFLAGS)
 			$(RM) $(OBJ) *~
-
 
 clean: 
 	$(RM) $(OBJ) $(EXECUTABLE) *~

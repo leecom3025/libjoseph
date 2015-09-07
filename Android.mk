@@ -19,9 +19,10 @@
 
 LOCAL_PATH:= $(call my-dir)
 
-#------------------------------------------------------------------------------
-# control variables
-#------------------------------------------------------------------------------
+commonsrc := \
+	$(LOCAL_PATH)/src/joseph_utils.c \
+	$(LOCAL_PATH)/src/joseph_perf.c \
+	$(LOCAL_PATH)/src/joseph_net.c
 
 #------------------------------------------------------------------------------
 # shared library
@@ -50,10 +51,7 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
@@ -135,10 +133,7 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
@@ -223,10 +218,7 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
@@ -307,10 +299,7 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
@@ -396,10 +385,8 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 endif
 
 LOCAL_SRC_FILES := \
-	libjoseph.c \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+	$(commonsrc) \
+	libjoseph.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include

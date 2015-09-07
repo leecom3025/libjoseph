@@ -15,7 +15,7 @@
  */
 
 #ifdef X86
-  #include "include/joseph_net.h"
+  #include "../include/joseph_net.h"
 #else
   #include "joseph_net.h"
 #endif

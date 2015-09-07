@@ -15,7 +15,7 @@
  */
 
 #if defined X86
-  #include "include/libjoseph.h"
+  #include "../include/libjoseph.h"
 #else
   #include "libjoseph.h"
 #endif
