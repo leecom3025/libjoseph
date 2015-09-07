@@ -22,15 +22,12 @@ LOCAL_PATH:= $(call my-dir)
 #------------------------------------------------------------------------------
 # control variables
 #------------------------------------------------------------------------------
-WITH_JPERF := true
-WITH_ZMQ := true
-# WITH_PERF := true
-WITH_CJSON := true
 
 #------------------------------------------------------------------------------
 # shared library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := libjoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -115,6 +112,7 @@ include $(BUILD_SHARED_LIBRARY)
 # shared library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := libjoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -155,6 +153,9 @@ LOCAL_SHARED_LIBRARIES += \
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
 	-Wno-format-contains-nul
+
+LOCAL_CFLAGS += \
+	-DHOST_ANDROID=1
 
 LOCAL_LDLIBS += \
 	-llog \
@@ -199,6 +200,7 @@ include $(BUILD_HOST_SHARED_LIBRARY)
 # static library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := stljoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -282,6 +284,7 @@ include $(BUILD_STATIC_LIBRARY)
 # host-static library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := stljoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -321,6 +324,9 @@ LOCAL_STATIC_LIBRARIES += \
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
 	-Wno-format-contains-nul
+
+LOCAL_CFLAGS += \
+	-DHOST_ANDROID=1
 
 LOCAL_LDLIBS += \
 	-llog \
@@ -366,6 +372,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # executable
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := joseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
