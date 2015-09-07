@@ -42,6 +42,9 @@ JLD("%ld\n", jperf_time()); // print
 ## Supported models
 - Nexus 4 (mako)
 - Nexus 5 (hammerhead)
+- Ultra Z (togari)
+- Galaxy S4 (i9500)
+- TBD: Nexus 6, Nexus 5(2015), G4, G Flex2, Galaxy S3, x86 Generic
 
 ## Dependency
 libJoseph depends on [ZeroMQ (v4.x)](https://github.com/zeromq/libzmq), [cJSON](https://github.com/kbranigan/cJSON).
