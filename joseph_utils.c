@@ -282,6 +282,11 @@ int Joseph_resetFile(char *arg) {
 // }
 
 int Joseph_readCPU_temp(int cpu, int *mTemp) {
+#ifdef HOST_ANDROID
+  *mTemp = cpu;
+  goto done;
+#endif 
+
   FILE *pFile;
   char *mFileName;
   int cnum = CPU_OFFSET + cpu;
@@ -297,8 +302,9 @@ int Joseph_readCPU_temp(int cpu, int *mTemp) {
 
   fscanf(pFile, "%d", mTemp);
   fclose(pFile);
-
   free(mFileName);
+
+done:
   return 0;
 }
 
@@ -320,6 +326,11 @@ int Joseph_readCPU_alltemps_free(int **mTemp) {
 }
 
 int Joseph_readCPU_util(int cpu, int *mUtil) {
+#ifdef HOST_ANDROID
+  *mUtil = cpu;
+  goto done;
+#endif
+
   FILE *pFile;
   char *mFileName;
   int mOnline = 0;
@@ -347,10 +358,16 @@ int Joseph_readCPU_util(int cpu, int *mUtil) {
   fclose(pFile);
   free(mFileName);
 
+done:
   return 0;
 }
 
 int Joseph_readCPU_freq(int cpu, int *mFreq) {
+#ifdef HOST_ANDROID
+  *mFreq = cpu;
+  goto done;
+#endif
+
   FILE *pFile;
   char *mFileName;
   int mOnline = 0;
@@ -380,6 +397,7 @@ int Joseph_readCPU_freq(int cpu, int *mFreq) {
   fclose(pFile);
   free(mFileName);
 
+done:
   return 0;
 }
 
