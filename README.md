@@ -37,7 +37,16 @@ jperf_stop();
 jperf_write("/data/joseph/jperf_data", "Job\tTime", "work:\t");
 JLD("%ld\n", jperf_time()); // print
 ```
-
+Joseph_readCPU_alltemps:
+```C++
+int *temperature;
+if (Joseph_readCPU_alltemps(&temperature) < 0) 
+  perror(strerror(errno));
+for (i = 0; i < CPU_NUM; i++) 
+  printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
+if (Joseph_readCPU_alltemps_free(&temperature) < 0) 
+  perror(strerror(errno));
+```
 
 ## Supported models
 - Nexus 4 (mako)
