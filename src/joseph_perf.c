@@ -15,7 +15,7 @@
  */
 
 #ifdef X86
-  #include "include/joseph_perf.h"
+  #include "../include/joseph_perf.h"
 #else
   #include "joseph_perf.h"
 #endif

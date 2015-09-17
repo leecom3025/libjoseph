@@ -15,7 +15,7 @@
  */
 
 #ifdef X86
-  #include "include/joseph_utils.h"
+  #include "../include/joseph_utils.h"
 #else 
   #include "joseph_utils.h"
 #endif
@@ -301,25 +301,15 @@ int Joseph_resetFile(char *arg) {
  *  (pointer to Int)
  * Usage:
  *  int temp;
- *  if (Joseph_readCPU_temp(&temp) < 0)
+ *  if (Joseph_readCPU_temp(cpu, &temp) < 0)
  *    perror(strerror(errno));
  */
-// int Joseph_readCPU_temp(int *mTemp) {
-//   FILE *pFile;
-
-//   setpriority(PRIO_PROCESS, 0, -20);
-//   if ((pFile = fopen(CPU_TEMP, "r")) == NULL) { 
-//     JLE("ERROR: %s", strerror(errno));
-//     return -1;
-//   }
-
-//   fscanf(pFile, "%d", mTemp);
-//   fclose(pFile);
-//   return 0;
-// }
-
 int Joseph_readCPU_temp(int cpu, int *mTemp) {
-#ifndef HOST_ANDROID
+#ifdef HOST_ANDROID
+  *mTemp = cpu;
+  goto done;
+#endif 
+
   FILE *pFile;
   char *mFileName;
   int cnum = CPU_OFFSET + cpu;
@@ -335,14 +325,20 @@ int Joseph_readCPU_temp(int cpu, int *mTemp) {
 
   fscanf(pFile, "%d", mTemp);
   fclose(pFile);
-
   free(mFileName);
-#else
-  *mTemp = cpu;
-#endif
+  
+	*mTemp = cpu;
+
+done:
   return 0;
 }
 
+/*
+ * Usage:
+ *  int *temp;
+ *  if (Joseph_readCPU_alltemps(&temp) < 0)
+ *    perror(strerror(errno));
+ */
 int Joseph_readCPU_alltemps(int **mTemp) {
   int (*tTemp)[CPU_NUM];
   int i;
@@ -361,6 +357,11 @@ int Joseph_readCPU_alltemps_free(int **mTemp) {
 }
 
 int Joseph_readCPU_util(int cpu, int *mUtil) {
+#ifdef HOST_ANDROID
+  *mUtil = cpu;
+  goto done;
+#endif
+
   FILE *pFile;
   char *mFileName;
   int mOnline = 0;
@@ -388,10 +389,16 @@ int Joseph_readCPU_util(int cpu, int *mUtil) {
   fclose(pFile);
   free(mFileName);
 
+done:
   return 0;
 }
 
 int Joseph_readCPU_freq(int cpu, int *mFreq) {
+#ifdef HOST_ANDROID
+  *mFreq = cpu;
+  goto done;
+#endif
+
   FILE *pFile;
   char *mFileName;
   int mOnline = 0;
@@ -421,6 +428,7 @@ int Joseph_readCPU_freq(int cpu, int *mFreq) {
   fclose(pFile);
   free(mFileName);
 
+done:
   return 0;
 }
 

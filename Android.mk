@@ -19,20 +19,18 @@
 
 LOCAL_PATH:= $(call my-dir)
 
-$(info Joseph said... \"Building for $(TARGET_PRODUCT)\")
+$(info Joseph said... "Building for $(TARGET_PRODUCT)")
 
-#------------------------------------------------------------------------------
-# control variables
-#------------------------------------------------------------------------------
-#WITH_JPERF := true
-#WITH_ZMQ := true
-# WITH_PERF := true
-#WITH_CJSON := true
+commonsrc := \
+	src/joseph_utils.c \
+	src/joseph_perf.c \
+	src/joseph_net.c
 
 #------------------------------------------------------------------------------
 # shared library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := libjoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -55,10 +53,7 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include \
@@ -66,8 +61,6 @@ LOCAL_C_INCLUDES += \
 	# external/curl/include \
 
 LOCAL_SHARED_LIBRARIES += \
-	libcutils \
-	libutils \
 	libc \
 	liblog
 
@@ -121,6 +114,7 @@ include $(BUILD_SHARED_LIBRARY)
 # shared library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := libjoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -143,18 +137,13 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
 	# external/curl/include \
 
 LOCAL_STATIC_LIBRARIES += \
-	libcutils \
-	libutils \
 	liblog
 
 LOCAL_CFLAGS += \
@@ -163,6 +152,9 @@ LOCAL_CFLAGS += \
 	-DHOST_ANDROID=1
 
 $(info $(TARGET_ARCH) == $(HOST_ARCH))
+
+LOCAL_CFLAGS += \
+	-DHOST_ANDROID=1
 
 LOCAL_LDLIBS += \
 	-llog \
@@ -207,6 +199,7 @@ include $(BUILD_HOST_SHARED_LIBRARY)
 # static library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := stljoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -229,19 +222,14 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
 
-LOCAL_SHARED_LIBRARIES += \
-	libcutils
+#LOCAL_SHARED_LIBRARIES += \
 
 LOCAL_STATIC_LIBRARIES += \
-	libutils \
 	libc \
 	liblog
 
@@ -292,6 +280,7 @@ include $(BUILD_STATIC_LIBRARY)
 # host-static library
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := stljoseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -314,23 +303,21 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -D_PRODUCT=3
 endif
 
-LOCAL_SRC_FILES := \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+LOCAL_SRC_FILES := $(commonsrc)
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include \
 	system/core/include
 
 LOCAL_SHARED_LIBRARIES += \
-	libcutils \
-	libutils \
 	liblog
 
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
 	-Wno-format-contains-nul
+
+LOCAL_CFLAGS += \
+	-DHOST_ANDROID=1
 
 LOCAL_LDLIBS += \
 	-llog \
@@ -376,6 +363,7 @@ include $(BUILD_HOST_STATIC_LIBRARY)
 # executable
 #------------------------------------------------------------------------------
 include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
 LOCAL_MODULE := joseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
@@ -399,17 +387,13 @@ else ifeq ($(TARGET_PRODUCT), cm_togari)
 endif
 
 LOCAL_SRC_FILES := \
-	libjoseph.c \
-	joseph_utils.c \
-	joseph_perf.c \
-	joseph_net.c
+	$(commonsrc) \
+	src/libjoseph.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
 
 LOCAL_SHARED_LIBRARIES += \
-	libcutils \
-	libutils \
 	liblog
 
 LOCAL_CFLAGS += \

@@ -15,7 +15,7 @@
  */
 
 #if defined X86
-  #include "include/libjoseph.h"
+  #include "../include/libjoseph.h"
 #else
   #include "libjoseph.h"
 #endif
@@ -45,7 +45,7 @@ int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
-
+/*
 	while(1)
 	{
 		usleep(2500);
@@ -63,7 +63,8 @@ int main (int argc, char* argv[]) {
 		for (threads = 0; threads < thread_num; threads++ )
 			pthread_join(pth[threads],NULL);
 	}
-#if 0
+*/
+#if 1
 #if defined ANDROID && defined PRODUCT
 	printf("Product is ");
 	if (strcmp(PRODUCT, hammerhead) == 0)
