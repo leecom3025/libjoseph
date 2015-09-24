@@ -96,19 +96,6 @@ extern "C" {
 	extern int Joseph_UtilFreq_read(struct jcpu *);
 	extern int Joseph_All_read(struct jcpu *);
 
-	int Joseph_readCPU_temp(int cpu, int *mTemp);
-	int Joseph_readCPU_alltemps(int **mTemp);
-	int Joseph_readCPU_alltemps_free(int **mTemp);
-	
-	int Joseph_readCPU_util(int cpu, int *mUtil);
-	int Joseph_readCPU_allutils(int **mUtil, int *online);
-	int Joseph_readCPU_freq(int cpu, int *mFreq);
-	int Joseph_readCPU_allfreqs(int **mFreq, int *online);
-	int Joseph_readCPU_both(int **mUtil, int **mFreq, int *online);
-
-	int Joseph_readCPU_allutils_free(int **mUtil);
-	int Joseph_readCPU_allfreqs_free(int **mFreq);
-	int Joseph_readCPU_both_free(int **mUtil, int **mFreq);
 	#endif // ANDROID
 
 #ifdef __cplusplus
