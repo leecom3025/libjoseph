@@ -28,6 +28,7 @@
 #include <sys/resource.h>
 
 #include "joseph_common.h"
+#include "joseph_struct.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -84,6 +85,16 @@ extern "C" {
 	
 	/* Thermal read/write */
 	static const int CPU_NUM = _CPU_NUM;
+
+//	int Joseph_CPU_init(struct jcpu *, int);
+	extern int Joseph_CPU_ops(struct jcpu ***);
+	extern int Joseph_CPU_read(struct jcpu **);
+	int Joseph_CPU_online(struct jcpu *);
+	extern int Joseph_Thermal_read(struct jcpu *);
+	extern int Joseph_Util_read(struct jcpu *);
+	extern int Joseph_Freq_read(struct jcpu *);
+	extern int Joseph_UtilFreq_read(struct jcpu *);
+	extern int Joseph_All_read(struct jcpu *);
 
 	int Joseph_readCPU_temp(int cpu, int *mTemp);
 	int Joseph_readCPU_alltemps(int **mTemp);

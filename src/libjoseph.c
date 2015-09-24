@@ -22,16 +22,7 @@
 
 void *threadFunc(void *arg)
 {
-	volatile int i=0; 
-	int j=0;
-	while(i<100000)
-	{
-		j=i%4827;
-		i++;
-		// printf("%d", i);
-	}
-	j++;
-  int *t;
+	int *t;
   int n;
   Joseph_readCPU_alltemps(&t);
 	for (n = 0; n < 4; n++) {
@@ -41,16 +32,91 @@ void *threadFunc(void *arg)
   return NULL;
 }
 
+void showThermal()
+{
+	int *temperature;
+	int i, cpu = 4;
+	Joseph_readCPU_alltemps(&temperature);
+#if 0
+	for ( i = 0; i < cpu; i++)
+		printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
+#endif
+	printf("%d\t%d\t%d\t%d\n", *(temperature), *(temperature+1),
+		*(temperature+2), *(temperature+3));
+	Joseph_readCPU_alltemps_free(&temperature);
+	return;	
+}
+
+void showUtil()
+{
+	int *util;
+	int i, cpu;
+	Joseph_readCPU_allutils(&util, &cpu);
+	for (i = 0; i < cpu; i++) 
+		printf("\t%d", *(util+i));
+	printf("\n");
+
+	//printf("%d\t%d\t%d\t%d\n", *util, *(util+1), *(util+2), *(util+3));
+	Joseph_readCPU_allutils_free(&util);
+	return;
+}
+
+void show() {
+	int *util, *freq, *temp;
+	int i, mCpu, cpu = 4;
+	char st[2048];
+	Joseph_readCPU_alltemps(&temp);
+	Joseph_readCPU_both(&util, &freq, &mCpu);
+
+	sprintf(st, "%d, %d, %d, %d [ ", *temp, *(temp+1), *(temp+2), *(temp+3));
+
+	for (i=0; i < mCpu; i++) {
+		if (*(freq+i) < 2265600){ 
+			char mBuff[64];
+
+			sprintf(mBuff, "%d(%d) ", *(util+i), *(freq+i));
+			strcat(st, mBuff);
+		} else
+			strcat(st, "*(*) ");
+	}
+	strcat(st, "]");
+	
+	ALOGD("%s",st);
+	Joseph_readCPU_alltemps_free(&temp);
+	Joseph_readCPU_both_free(&util, &freq);
+	
+	//showThermal();
+	//showUtil();
+
+	return;
+}
+
 int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
-/*
+	struct jcpu **cpu;
+	Joseph_CPU_ops(&cpu);
+
 	while(1)
 	{
-		usleep(2500);
+		//sleep(1);
+		usleep(10000);
+		if (Joseph_CPU_read(cpu) != -1) {
+			int i;
+			char st[2048];
+			char temp[512], util[512], freq[512];
+			sprintf(st, "%d, %d, %d, %d [%d(%d) %d(%d) %d(%d) %d(%d)]\n",
+				cpu[0]->temp, cpu[1]->temp, cpu[2]->temp, cpu[3]->temp, 
+				cpu[0]->util, cpu[0]->freq, cpu[1]->util, cpu[1]->freq,
+				cpu[2]->util, cpu[2]->freq, cpu[3]->util, cpu[3]->freq);
+			ALOGD("%s", st);
+		}
+//		show();
+		
+		#if 0 
 		int threads=0;
-		int thread_num = 50;
+		int thread_num =1;
 		pthread_t pth[thread_num];
 
 		for(;threads<thread_num;threads++)
@@ -62,9 +128,10 @@ int main (int argc, char* argv[]) {
 		printf("main waiting for thread to terminate...\n");
 		for (threads = 0; threads < thread_num; threads++ )
 			pthread_join(pth[threads],NULL);
+		#endif
 	}
-*/
-#if 1
+
+#if 0
 #if defined ANDROID && defined PRODUCT
 	printf("Product is ");
 	if (strcmp(PRODUCT, hammerhead) == 0)

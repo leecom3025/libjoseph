@@ -295,211 +295,184 @@ int Joseph_resetFile(char *arg) {
 
 /* Thermal unit supported for Android only currently */
 #if defined ANDROID 
-/* Thermal read/write */
-/*
- * Param: 
- *  (pointer to Int)
- * Usage:
- *  int temp;
- *  if (Joseph_readCPU_temp(cpu, &temp) < 0)
- *    perror(strerror(errno));
- */
-int Joseph_readCPU_temp(int cpu, int *mTemp) {
-#ifdef HOST_ANDROID
-  *mTemp = cpu;
-  goto done;
-#endif 
 
-  FILE *pFile;
-  char *mFileName;
-  int cnum = CPU_OFFSET + cpu;
-
-  mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(int));
-  sprintf(mFileName, CPU_TEMP, cnum);
-
-  setpriority(PRIO_PROCESS, 0, -20);
-  if ((pFile = fopen(mFileName, "r")) == NULL) { 
-    JLE("ERROR: %s", strerror(errno));
-    return -1;
-  }
-
-  fscanf(pFile, "%d", mTemp);
-  fclose(pFile);
-  free(mFileName);
-  
-	*mTemp = cpu;
+int Joseph_CPU_init(struct jcpu **c, int id) {
+	struct jcpu *cpu;
+	cpu = (struct jcpu *) malloc(sizeof(jcpu));
+	if (cpu == NULL) 
+		return -1;
 
 done:
-  return 0;
+	printf("init for %d: %08x\n", id, (unsigned int) cpu);
+	cpu->id = id;
+	cpu->temp = 0;
+	cpu->util = 0;
+	cpu->freq = 0;
+	*c = cpu;
+	return 0;
 }
 
-/*
- * Usage:
- *  int *temp;
- *  if (Joseph_readCPU_alltemps(&temp) < 0)
- *    perror(strerror(errno));
- */
-int Joseph_readCPU_alltemps(int **mTemp) {
-  int (*tTemp)[CPU_NUM];
-  int i;
+int Joseph_CPU_ops(struct jcpu ***cpu) {
+	int i;
+	struct jcpu **tCpu;
+	size_t len = sizeof(struct jcpu*);
 
-  tTemp = malloc(sizeof(int32_t) * CPU_NUM);
-  for (i = 0; i < CPU_NUM; i++) {
-    Joseph_readCPU_temp(i, &((*tTemp)[i]));
-  }
-  *mTemp = *tTemp;
-  return 0;
+	tCpu = (struct jcpu *) malloc(len * CPU_NUM);
+	
+	for (i = 0; i < CPU_NUM; i++) {
+		struct jcpu *holder;
+		holder = tCpu[i];
+		Joseph_CPU_init(&holder, i);
+		tCpu[i] = holder;
+	}
+	
+	*cpu = tCpu;
+	return 0;
 }
 
-int Joseph_readCPU_alltemps_free(int **mTemp) {
-  free(mTemp);
-  return 0;
+int Joseph_CPU_read(struct jcpu **cpu) {
+	int i;	
+	size_t len = sizeof(struct jcpu*);
+
+	for (i = 0; i < CPU_NUM; i++){
+		struct jcpu *holder;
+		holder = cpu[i]; 
+		Joseph_All_read(holder); 
+	}
+
+	return 0;
 }
 
-int Joseph_readCPU_util(int cpu, int *mUtil) {
-#ifdef HOST_ANDROID
-  *mUtil = cpu;
-  goto done;
-#endif
+int Joseph_CPU_online(struct jcpu *cpu) {
+	FILE *pFile;
+	char *mFileName;
+	int mOnline = 0;
+	
+	mFileName = (char*) malloc(strlen(CPU_FREQ) + sizeof(int));
+	sprintf(mFileName, CPU_ONLINE, cpu->id);
+	if ((pFile = fopen(mFileName, "r")) == NULL) {
+		JLE("ERROR: %s", strerror(errno));
+		return -1;
+	}
+	fscanf(pFile, "%d", &mOnline);
+	fclose(pFile);
 
-  FILE *pFile;
-  char *mFileName;
-  int mOnline = 0;
-
-  mFileName = (char*) malloc(strlen(CPU_FREQ) + sizeof(int));
-  sprintf(mFileName, CPU_ONLINE, cpu);
-  if ((pFile = fopen(mFileName, "r")) == NULL) {
-    JLE("ERROR: %s", strerror(errno));
-    return -1;
-  }
-  fscanf(pFile, "%d", &mOnline);
-  fclose(pFile);
-
-  if (mOnline != 1) {
-    JLW("CPU %d is offline", cpu);
-    return -1;
-  }
-
-  sprintf(mFileName, CPU_UTIL, cpu);
-  if ((pFile = fopen(mFileName, "r")) == NULL) {
-    JLE("ERROR: %s", strerror(errno));
-    return -1;
-  }
-  fscanf(pFile, "%d", mUtil);
-  fclose(pFile);
-  free(mFileName);
+	if (mOnline != 1) {
+		JLW("CPU %d is offline", cpu->id);
+		goto done;
+	}
 
 done:
-  return 0;
+	cpu->online = mOnline;
+	free(mFileName);
+	return 0;
 }
 
-int Joseph_readCPU_freq(int cpu, int *mFreq) {
-#ifdef HOST_ANDROID
-  *mFreq = cpu;
-  goto done;
-#endif
+int Joseph_Thermal_read(struct jcpu *cpu) {
+	FILE *pFile;
+	char *mFileName;
+	int cnum = CPU_OFFSET + cpu->id;
 
-  FILE *pFile;
-  char *mFileName;
-  int mOnline = 0;
+	mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(int32_t));
+	sprintf(mFileName, CPU_TEMP, cnum);
 
-  mFileName = (char*) malloc(strlen(CPU_FREQ) + sizeof(int));
-  sprintf(mFileName, CPU_ONLINE, cpu);
-  if ((pFile = fopen(mFileName, "r")) == NULL) {
-    JLE("ERROR: %s", strerror(errno));
-    return -1;
-  }
+	setpriority(PRIO_PROCESS, 0, -20);
+	if ((pFile = fopen(mFileName, "r")) == NULL) {
+		JLE("ERROR: %s", strerror(errno));
+		return -1;
+	}
+	
+	fscanf(pFile, "%d", &(cpu->temp));
+	setpriority(PRIO_PROCESS, 0, 0);
+	fclose(pFile);
+	free(mFileName);
+	
+	return 0;
+}
 
-  fscanf(pFile, "%d", &mOnline);
-  fclose(pFile);
+int Joseph_Util_read(struct jcpu *cpu) {
+	FILE *pFile = NULL;
+	char *mFileName = NULL;
+	int mUtil = 0;
 
-  if (mOnline != 1) {
-    JLW("CPU %d is offline", cpu);
-    return -1;
-  }
+	if (cpu->online != 1) {
+		goto done;
+	} else {
+		mFileName = (char*) malloc(strlen(CPU_UTIL)+ sizeof(int));
+		sprintf(mFileName, CPU_UTIL, cpu->id);
 
-  sprintf(mFileName, CPU_FREQ, cpu);
-  if ((pFile = fopen(mFileName, "r")) == NULL) {
-    JLE("ERROR: %s", strerror(errno));
-    return -1;
-  }
+		setpriority(PRIO_PROCESS, 0, -20);
+		if ((pFile = fopen(mFileName, "r")) == NULL) {
+			JLE("ERROR: %s", strerror(errno));
+			free(mFileName);
+			return -1; 
+		}
+		fscanf(pFile, "%d", &mUtil);
+		setpriority(PRIO_PROCESS, 0, 0);
 
-  fscanf(pFile, "%d", mFreq);
-  fclose(pFile);
-  free(mFileName);
+		fclose(pFile);
+		free(mFileName);
+	}
 
 done:
-  return 0;
+	cpu->util = mUtil;
+	return 0;
 }
 
-/*
- * Param: 
- *  (pointer to pointer to Int arr, pointer to Int)
- * Usage:
- *  int *utils;
- *  int online;
- *  Joseph_readCPU_allutils(&utils, &online);
- *  for (int i = 0; i < online; i++) 
- *    printf("%d ", *(utils + i));
- *  Joseph_readCPU_allutils_free(&utils); // make sure to free
- */
-int Joseph_readCPU_allutils(int **mUtil, int *online) {
-  int (*tUtil)[CPU_NUM];
-  int i;
+int Joseph_Freq_read(struct jcpu *cpu) {
+	FILE *pFile = NULL;
+	char *mFileName = NULL;
+	int mFreq = 0;
 
-  *online = 0;
-  tUtil = malloc(sizeof(int32_t) * CPU_NUM);
+	if (cpu->online != 1) {
+		goto done;
+	} else {
+		mFileName = (char*) malloc(strlen(CPU_FREQ)+ sizeof(int));
+		sprintf(mFileName, CPU_FREQ, cpu->id);
 
-  for (i = 0; i < CPU_NUM; i++) {
-    if (Joseph_readCPU_util(i, &((*tUtil)[i])) > - 1) {
-      (*(online))++;
-    }
-  } 
+		setpriority(PRIO_PROCESS, 0, -20);
+		if ((pFile = fopen(mFileName, "r")) == NULL) {
+			JLE("ERROR: %s", strerror(errno));
+			free(mFileName);
+			return -1; 
+		}
+		fscanf(pFile, "%d", &mFreq);
+		setpriority(PRIO_PROCESS, 0, 0);
+		
+		fclose(pFile);
+		free(mFileName);
+	}
 
-  *mUtil = *tUtil;
-  return 0;
+done:
+	cpu->freq = mFreq;
+	return 0;
 }
 
-int Joseph_readCPU_allutils_free(int **mUtil) {
-  free(*mUtil);
-  return 0;
+int Joseph_UtilFreq_read(struct jcpu *cpu) {
+	if (Joseph_CPU_online(cpu) == -1) {
+		cpu->online = -1;
+		return -1;
+	}
+
+	if (Joseph_Util_read(cpu) == -1) {
+		cpu->util = -1;
+		return -1;
+	}
+
+	if (Joseph_Freq_read(cpu) == -1) {
+		cpu->freq = -1;
+		return -1;
+	}
+
+	return 0;
 }
 
-int Joseph_readCPU_allfreqs(int **mFreq, int *online) {
-  int (*tFreq)[CPU_NUM];
-  int i;
+int Joseph_All_read(struct jcpu *cpu) {
+	int result = 0;
+	result = Joseph_Thermal_read(cpu);
+	result = Joseph_UtilFreq_read(cpu);
 
-  *online = 0;
-  tFreq = malloc(sizeof(int32_t) * CPU_NUM);
-
-  for (i = 0; i < CPU_NUM; i++) {
-    // #if DONTREAD
-    //   Joseph_readCPU_freq(i, &((*tFreq)[i]));
-    // #else
-      if(Joseph_readCPU_freq(i, &((*tFreq)[i])) > -1) {
-          (*(online))++;
-      }
-    // #endif
-  }
-  *mFreq = *tFreq;
-  return 0;
+	return result == 0 ? 0 : -1;
 }
 
-int Joseph_readCPU_allfreqs_free(int **mFreq) {
-  free(mFreq);
-  return 0;
-}
-
-int Joseph_readCPU_both(int **mUtil, int **mFreq, int *online) {
-  Joseph_readCPU_allutils(mUtil, online);
-  Joseph_readCPU_allfreqs(mFreq, online);
-
-  return 0;
-}
-
-int Joseph_readCPU_both_free(int **mUtil, int **mFreq) {
-  Joseph_readCPU_allutils_free(mUtil);
-  Joseph_readCPU_allfreqs_free(mFreq);
-  return 0;
-}
 #endif // ANDROID

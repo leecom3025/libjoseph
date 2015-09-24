@@ -22,7 +22,7 @@
   #include <cutils/properties.h>
   #include <android/log.h>
   #include <utils/Log.h>
-  #include <cutils/logger.h>
+//  #include <cutils/logger.h>
   #include <errno.h>
 #else
   #include <errno.h>
@@ -44,16 +44,24 @@
  		((void)ALOG(LOG_DEBUG, "libJoseph", __VA_ARGS__)); \
   		JLOG("Debug", __VA_ARGS__); \
   } //
+#ifdef QUITE
+	#define JLE(...){}
+#else
 	#define JLE(...) \
 	{ \
   		((void)ALOG(LOG_ERROR, "libJoseph", __VA_ARGS__)); \
   		JLOG("Error", __VA_ARGS__); \
   } //
+#endif
+#ifdef QUITE
+	#define JLW(...) {}
+#else
 	#define JLW(...) \
 	{ \
   		((void)ALOG(LOG_WARN, "libJoseph", __VA_ARGS__)); \
   		JLOG("Warming", __VA_ARGS__); \
   } //
+#endif
   #define JFD(...) \
   { \
  		((void)ALOG(LOG_DEBUG, "libjoseph", "(%s) %s\n", \
