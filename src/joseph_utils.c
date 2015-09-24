@@ -317,7 +317,7 @@ int Joseph_CPU_ops(struct jcpu ***cpu) {
 	struct jcpu **tCpu;
 	size_t len = sizeof(struct jcpu*);
 
-	tCpu = (struct jcpu *) malloc(len * CPU_NUM);
+	tCpu = (struct jcpu **) malloc(len * CPU_NUM);
 	
 	for (i = 0; i < CPU_NUM; i++) {
 		struct jcpu *holder;
