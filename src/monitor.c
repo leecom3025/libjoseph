@@ -9,6 +9,8 @@ int main (int argc, char *argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
+	
+	system("echo ondemand > /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor");
 
 	int period = 100000;
 	char st[2048];

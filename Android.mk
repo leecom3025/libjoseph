@@ -528,3 +528,54 @@ ifeq ($(WITH_CJSON), true)
 endif
 
 include $(BUILD_EXECUTABLE)
+
+#------------------------------------------------------------------------------
+# JNI binding
+#------------------------------------------------------------------------------
+include $(CLEAR_VARS)
+include $(LOCAL_PATH)/Config.mk
+LOCAL_MODULE := joseph_jni
+
+ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
+else ifeq ($(TARGET_PRODUCT), cm_hammerhead)
+	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
+	LOCAL_CFLAGS += -D_PRODUCT=1
+else ifeq ($(TARGET_PRODUCT), full_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
+else ifeq ($(TARGET_PRODUCT), cm_mako)
+	LOCAL_CFLAGS += -DPRODUCT="mako"
+	LOCAL_CFLAGS += -D_PRODUCT=2
+else ifeq ($(TARGET_PRODUCT), full_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), cm_togari)
+	LOCAL_CFLAGS += -DPRODUCT="togari"
+	LOCAL_CFLAGS += -D_PRODUCT=3
+endif
+
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := \
+	src/jni/joseph_Torh.cpp
+LOCAL_C_INCLUDES := \
+	$(JNI_H_INCLUDE) \
+	$(LOCAL_PATH)/include
+LOCAL_SHARED_LIBRARIES := \
+	libjoseph
+LOCAL_PRELINK_MODULE := false
+LOCAL_CFLAGS += -Wno-write-strings
+include $(BUILD_SHARED_LIBRARY)
+
+#------------------------------------------------------------------------------
+# Java
+#------------------------------------------------------------------------------
+include $(CLEAR_VARS)
+LOCAL_MODULE_TAGS := optional
+LOCAL_SRC_FILES := $(call all-java-files-under,.)
+LOCAL_MODULE := joseph
+LOCAL_JAVA_STATIC_LIBRARIES := android-common
+include $(BUILD_JAVA_LIBRARY)
+
+
