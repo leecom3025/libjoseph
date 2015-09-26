@@ -10,6 +10,7 @@ extern "C" {
 #endif 
 
 JNIEXPORT void JNICALL joseph_Torh_check(JNIEnv *, jclass);
+JNIEXPORT void JNICALL joseph_Torh_init(JNIEnv *, jclass);
 JNIEXPORT jdouble JNICALL joseph_Torh_getTemp(JNIEnv *, jclass);
 JNIEXPORT jdouble JNICALL joseph_Torh_getUtil(JNIEnv *, jclass);
 JNIEXPORT jdouble JNICALL joseph_Torh_getFreq(JNIEnv *, jclass);
