@@ -230,8 +230,8 @@ LOCAL_C_INCLUDES += \
 #LOCAL_SHARED_LIBRARIES += \
 
 LOCAL_STATIC_LIBRARIES += \
-	libc \
 	liblog
+	#libc \
 
 LOCAL_CFLAGS += \
 	-DANDROID=1 \
