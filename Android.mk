@@ -51,6 +51,15 @@ else ifeq ($(TARGET_PRODUCT), full_togari)
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
 	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), full_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_himaul)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
 endif
 
 LOCAL_SRC_FILES := $(commonsrc)
@@ -135,6 +144,15 @@ else ifeq ($(TARGET_PRODUCT), full_togari)
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
 	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), full_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_himaul)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
 endif
 
 LOCAL_SRC_FILES := $(commonsrc)
@@ -220,6 +238,15 @@ else ifeq ($(TARGET_PRODUCT), full_togari)
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
 	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), full_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_himaul)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
 endif
 
 LOCAL_SRC_FILES := $(commonsrc)
@@ -301,6 +328,15 @@ else ifeq ($(TARGET_PRODUCT), full_togari)
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
 	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), full_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_himaul)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
 endif
 
 LOCAL_SRC_FILES := $(commonsrc)
@@ -384,6 +420,15 @@ else ifeq ($(TARGET_PRODUCT), full_togari)
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
 	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), full_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_himaul)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
 endif
 
 LOCAL_SRC_FILES := \
@@ -469,6 +514,15 @@ else ifeq ($(TARGET_PRODUCT), full_togari)
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
 	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), full_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_himaul)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
 endif
 
 LOCAL_SRC_FILES := \
@@ -554,6 +608,15 @@ else ifeq ($(TARGET_PRODUCT), full_togari)
 else ifeq ($(TARGET_PRODUCT), cm_togari)
 	LOCAL_CFLAGS += -DPRODUCT="togari"
 	LOCAL_CFLAGS += -D_PRODUCT=3
+else ifeq ($(TARGET_PRODUCT), full_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_hima)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
+else ifeq ($(TARGET_PRODUCT), cm_himaul)
+	LOCAL_CFLAGS += -DPRODUCT="hima"
+	LOCAL_CFLAGS += -D_PRODUCT=4
 endif
 
 LOCAL_MODULE_TAGS := optional

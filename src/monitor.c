@@ -37,7 +37,7 @@ int main (int argc, char *argv[]) {
 	system("echo ondemand > /sys/devices/system/cpu/cpu2/cpufreq/scaling_governor");
 	system("echo ondemand > /sys/devices/system/cpu/cpu3/cpufreq/scaling_governor");*/
 
-	int period = 100000;
+	int period = 100000; // 100 mili == 0.1 sec
 	char st[2048];
 	struct jcpu **cpu;
 	Joseph_CPU_ops(&cpu);

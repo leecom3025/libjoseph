@@ -78,6 +78,9 @@ extern "C" {
 		#elif _PRODUCT == _togari
 			#define CPU_OFFSET 5
 			#define _CPU_NUM 4
+		#elif _PRODUCT == _hima
+			#define CPU_OFFSET 9 
+			#define _CPU_NUM 8
 		#else
 			#define CPU_OFFSET 0
 			#define _CPU_NUM 1
