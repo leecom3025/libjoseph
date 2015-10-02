@@ -27,6 +27,8 @@ static const char* CPU_UTIL
   = "/sys/devices/system/cpu/cpu%d/cpufreq/cpu_utilization";
 static const char* CPU_FREQ
   = "/sys/devices/system/cpu/cpu%d/cpufreq/scaling_cur_freq";
+static const char* CPU_TIME
+  = "/sys/devices/system/cpu/cpufreq/stats/cpu%d/time_in_state";
 #elif defined X86
   #warning TODO: finish x86 CPU monitor support
 #endif 
@@ -297,47 +299,60 @@ int Joseph_resetFile(char *arg) {
 #if defined ANDROID 
 
 int Joseph_CPU_init(struct jcpu **c, int id) {
-	struct jcpu *cpu;
+  char *fileName;
+  struct jcpu *cpu;
 	cpu = (struct jcpu *) malloc(sizeof(jcpu));
 	if (cpu == NULL) 
 		return -1;
 
 done:
-	printf("init for %d: %08x\n", id, (unsigned int) cpu);
+	printf("init for %d at %08x\n", id, cpu);
 	cpu->id = id;
 	cpu->temp = 0;
 	cpu->util = 0;
 	cpu->freq = 0;
-	*c = cpu;
+#if _PRODUCT == _hima
+  int i;
+  for (i = 0; i < FREQ_LEVEL; i++) {
+    cpu->freq_a[i].seq = i;
+//    printf ("assigned %d\n", cpu->freq_a[i].seq);
+  }
+  fileName = (char*) malloc(strlen(CPU_TIME) + sizeof(int32_t));
+  if (fileName == NULL)
+    return -1;
+  sprintf(fileName, CPU_TIME, cpu->id);
+  cpu->stat_path = fileName;
+  Joseph_Freq_stat_init(cpu);
+#endif
+  *c = cpu;
 	return 0;
 }
 
 int Joseph_CPU_ops(struct jcpu ***cpu) {
-	int i;
+  int i;
 	struct jcpu **tCpu;
-	size_t len = sizeof(struct jcpu*);
+	ssize_t len = sizeof(struct jcpu*);
 
 	tCpu = (struct jcpu **) malloc(len * CPU_NUM);
 	
 	for (i = 0; i < CPU_NUM; i++) {
 		struct jcpu *holder;
-		holder = tCpu[i];
+    holder = tCpu[i];
 		Joseph_CPU_init(&holder, i);
 		tCpu[i] = holder;
 	}
-	
 	*cpu = tCpu;
 	return 0;
 }
 
 int Joseph_CPU_read(struct jcpu **cpu) {
-	int i;	
-	size_t len = sizeof(struct jcpu*);
+	int i;
+  size_t len = sizeof(struct jcpu*);
 
 	for (i = 0; i < CPU_NUM; i++){
 		struct jcpu *holder;
-		holder = cpu[i]; 
-		Joseph_All_read(holder); 
+		holder = cpu[i];
+		Joseph_All_read(holder);
 	}
 
 	return 0;
@@ -346,7 +361,7 @@ int Joseph_CPU_read(struct jcpu **cpu) {
 int Joseph_CPU_online(struct jcpu *cpu) {
 	FILE *pFile;
 	char *mFileName;
-	int mOnline = 0;
+	ssize_t mOnline = 0;
 	
 	mFileName = (char*) malloc(strlen(CPU_FREQ) + sizeof(int));
 	sprintf(mFileName, CPU_ONLINE, cpu->id);
@@ -371,9 +386,9 @@ done:
 int Joseph_Thermal_read(struct jcpu *cpu) {
 	FILE *pFile;
 	char *mFileName;
-	int cnum = CPU_OFFSET + cpu->id;
+	ssize_t cnum = CPU_OFFSET + cpu->id;
 
-	mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(int32_t));
+	mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(uint32_t));
 	sprintf(mFileName, CPU_TEMP, cnum);
 
 	setpriority(PRIO_PROCESS, 0, -20);
@@ -391,14 +406,23 @@ int Joseph_Thermal_read(struct jcpu *cpu) {
 }
 
 int Joseph_Util_read(struct jcpu *cpu) {
+#if _PRODUCT == _hima
+  int result = 0;
+
+  setpriority(PRIO_PROCESS, 0, -20);
+  result = Joseph_Freq_stat(cpu);
+  setpriority(PRIO_PROCESS, 0, 0);
+
+  return result;
+#endif
 	FILE *pFile = NULL;
 	char *mFileName = NULL;
-	int mUtil = 0;
+	int32_t mUtil = 0;
 
 	if (cpu->online != 1) {
 		goto done;
 	} else {
-		mFileName = (char*) malloc(strlen(CPU_UTIL)+ sizeof(int));
+		mFileName = (char*) malloc(strlen(CPU_UTIL)+ sizeof(uint32_t));
 		sprintf(mFileName, CPU_UTIL, cpu->id);
 
 		setpriority(PRIO_PROCESS, 0, -20);
@@ -422,12 +446,12 @@ done:
 int Joseph_Freq_read(struct jcpu *cpu) {
 	FILE *pFile = NULL;
 	char *mFileName = NULL;
-	int mFreq = 0;
+	int32_t mFreq = 0;
 
 	if (cpu->online != 1) {
 		goto done;
 	} else {
-		mFileName = (char*) malloc(strlen(CPU_FREQ)+ sizeof(int));
+		mFileName = (char*) malloc(strlen(CPU_FREQ)+ sizeof(uint32_t));
 		sprintf(mFileName, CPU_FREQ, cpu->id);
 
 		setpriority(PRIO_PROCESS, 0, -20);
@@ -448,6 +472,84 @@ done:
 	return 0;
 }
 
+int Joseph_Freq_stat_get(struct freq_str *freq){
+  return 0;
+}
+
+int Joseph_Freq_stat_init(struct jcpu *cpu){
+  FILE *fp;
+  char *fileName, *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+  int i = 0 ;
+
+  fp = fopen(cpu->stat_path, "r");
+  while ((read = getline(&line, &len, fp)) != -1) {
+    int id, time;
+    ssize_t last;
+    sscanf(line, "%d %d\n", &id, &time);
+    cpu->freq_a[i].id = id;
+    cpu->freq_a[i].last = time;
+    cpu->freq_a[i].time = time;
+    i++;
+  }
+
+  cpu->max_freq = cpu->freq_a[i-1].id;
+
+  fclose(fp);
+  return 0; 
+}
+
+int Joseph_Freq_stat_read(struct jcpu *cpu){
+  FILE *fp;
+  char *fileName, *line = NULL;
+  size_t len = 0;
+  ssize_t read;
+  int i = 0;
+  double total_time = 0;
+  double total_freq = 0;
+
+  fp = fopen(cpu->stat_path, "r");
+
+  while ((read = getline(&line, &len, fp)) != -1) {
+    int32_t id, time, diff;
+    ssize_t last;
+
+    sscanf(line, "%d %d\n", &id, &time);
+    last = cpu->freq_a[i].last;
+    
+    if (last != time) { 
+      diff = time - last;
+      total_time += diff;
+      total_freq += (id * diff);
+//      printf("%f: %f [max: %d]\n", id, diff, cpu->max_freq);
+    }
+
+    cpu->freq_a[i].last = cpu->freq_a[i].time;
+    cpu->freq_a[i].time = time;
+    i++;
+  }
+
+  double potential = (((double)cpu->max_freq) * total_time);
+  double d_util = (total_freq / potential) * 100;
+  cpu->util = (int32_t)d_util;
+//  printf ("%d util: %d\n", cpu->id, cpu->util);
+
+  fclose(fp);
+  return 0; 
+}
+
+int Joseph_Freq_stat(struct jcpu *cpu) 
+{
+#if _PRODUCT != _hima
+  return -1;
+#endif
+//  printf("Reading cpu %d:\n", cpu->id); 
+  Joseph_Freq_stat_read(cpu);
+
+  return 0; 
+}
+
 int Joseph_UtilFreq_read(struct jcpu *cpu) {
 	if (Joseph_CPU_online(cpu) == -1) {
 		cpu->online = -1;
@@ -456,19 +558,17 @@ int Joseph_UtilFreq_read(struct jcpu *cpu) {
 
 	if (Joseph_Util_read(cpu) == -1) {
 		cpu->util = -1;
-		return -1;
 	}
 
 	if (Joseph_Freq_read(cpu) == -1) {
 		cpu->freq = -1;
-		return -1;
 	}
 
 	return 0;
 }
 
 int Joseph_All_read(struct jcpu *cpu) {
-	int result = 0;
+	ssize_t result = 0;
 	result = Joseph_Thermal_read(cpu);
 	result = Joseph_UtilFreq_read(cpu);
 

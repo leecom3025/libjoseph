@@ -80,6 +80,7 @@
   #define _hammerhead 1
   #define _mako 2
   #define _togari 3
+  #define _hima 4
 
 #else
 	#define DEFAULT_PATH "/tmp/joseph"

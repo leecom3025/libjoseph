@@ -87,7 +87,7 @@ extern "C" {
 		#endif 
 	
 	/* Thermal read/write */
-	static const int CPU_NUM = _CPU_NUM;
+	static const ssize_t CPU_NUM = _CPU_NUM;
 
 //	int Joseph_CPU_init(struct jcpu *, int);
 	extern int Joseph_CPU_ops(struct jcpu ***);
@@ -96,6 +96,7 @@ extern "C" {
 	extern int Joseph_Thermal_read(struct jcpu *);
 	extern int Joseph_Util_read(struct jcpu *);
 	extern int Joseph_Freq_read(struct jcpu *);
+  extern int Joseph_Freq_stat(struct jcpu *);
 	extern int Joseph_UtilFreq_read(struct jcpu *);
 	extern int Joseph_All_read(struct jcpu *);
 

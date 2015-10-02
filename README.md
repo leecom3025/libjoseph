@@ -53,6 +53,7 @@ if (Joseph_readCPU_alltemps_free(&temperature) < 0)
 - Nexus 5 (hammerhead)
 - Ultra Z (togari)
 - Galaxy S4 (i9500)
+- One M9 (hami)
 - TBD: Nexus 6, Nexus 5(2015), G4, G Flex2, Galaxy S3, x86 Generic
 
 ## Dependency
