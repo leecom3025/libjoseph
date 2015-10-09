@@ -80,7 +80,7 @@ extern "C" {
 #endif
 	void jperf_usage();
 
-	unsigned long getmicro();
+	ssize_t getmicro();
 	void jperf_start();
 	void jperf_stop();
 	unsigned long jperf_time();
