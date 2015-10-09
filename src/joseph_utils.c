@@ -388,6 +388,11 @@ int Joseph_Thermal_read(struct jcpu *cpu) {
 	char *mFileName;
 	ssize_t cnum = CPU_OFFSET + cpu->id;
 
+#if _PRODUCT == _hima
+  if (cpu->id > 4) 
+    cnum += 2;
+#endif
+
 	mFileName = (char*) malloc(strlen(CPU_TEMP) + sizeof(uint32_t));
 	sprintf(mFileName, CPU_TEMP, cnum);
 

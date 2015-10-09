@@ -79,7 +79,11 @@ extern "C" {
 			#define CPU_OFFSET 5
 			#define _CPU_NUM 4
 		#elif _PRODUCT == _hima
-			#define CPU_OFFSET 9
+    /* zone 12-13 --> sth else 
+     * 0, 1, 2, 3,  4,  5,  6,  7
+     * 7, 8, 9, 10, 11, 14, 15, 16 
+     */
+			#define CPU_OFFSET 7
 			#define _CPU_NUM 8
 		#else
 			#define CPU_OFFSET 0
