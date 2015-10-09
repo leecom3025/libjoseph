@@ -27,7 +27,13 @@ int main (int argc, char *argv[]) {
 		if (Joseph_CPU_read(cpu) != -1) {
 			bzero(st, 2048);
 #if _PRODUCT == _hima
-			sprintf(st, "%lu, %d, %d, %d, %d, %d, %d, %d, %d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d\n",
+      sprintf(st, "%lu, %d,%d,%d,%d,%d,%d,%d,%d, %d,%d,%d,%d,%d,%d,%d,%d\n", getmicro(),
+				cpu[0]->temp, cpu[1]->temp, cpu[2]->temp, cpu[3]->temp, 
+				cpu[4]->temp, cpu[5]->temp, cpu[6]->temp, cpu[7]->temp, 
+				cpu[0]->freq, cpu[1]->freq, cpu[2]->freq, cpu[3]->freq,
+				cpu[4]->freq, cpu[5]->freq, cpu[6]->freq, cpu[7]->freq);
+          
+/*			sprintf(st, "%lu, %d, %d, %d, %d, %d, %d, %d, %d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d\n",
 				getmicro(),
 				cpu[0]->temp, cpu[1]->temp, cpu[2]->temp, cpu[3]->temp, 
 				cpu[4]->temp, cpu[5]->temp, cpu[6]->temp, cpu[7]->temp, 
@@ -35,12 +41,12 @@ int main (int argc, char *argv[]) {
 				cpu[2]->util, cpu[2]->freq, cpu[3]->util, cpu[3]->freq,
 				cpu[4]->util, cpu[4]->freq, cpu[5]->util, cpu[5]->freq,
 				cpu[6]->util, cpu[6]->freq, cpu[7]->util, cpu[7]->freq);
+*/
 #else
-      sprintf(st, "%lu, %d, %d, %d, %d, %d,%d, %d,%d, %d,%d, %d,%d\n",
+      sprintf(st, "%lu, %d,%d,%d,%d, %d,%d,%d,%d\n",
 				getmicro(),
 				cpu[0]->temp, cpu[1]->temp, cpu[2]->temp, cpu[3]->temp, 
-				cpu[0]->util, cpu[0]->freq, cpu[1]->util, cpu[1]->freq,
-				cpu[2]->util, cpu[2]->freq, cpu[3]->util, cpu[3]->freq);
+				cpu[0]->freq, cpu[1]->freq, cpu[2]->freq, cpu[3]->freq);
 #endif
       ALOGD("%s", st);
 		}
