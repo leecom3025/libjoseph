@@ -556,10 +556,10 @@ int Joseph_UtilFreq_read(struct jcpu *cpu) {
 		return -1;
 	}
 
-	if (Joseph_Util_read(cpu) == -1) {
+/*	if (Joseph_Util_read(cpu) == -1) {
 		cpu->util = -1;
 	}
-
+*/
 	if (Joseph_Freq_read(cpu) == -1) {
 		cpu->freq = -1;
 	}

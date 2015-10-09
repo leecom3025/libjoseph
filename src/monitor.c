@@ -26,6 +26,7 @@ int main (int argc, char *argv[]) {
 		usleep(period);
 		if (Joseph_CPU_read(cpu) != -1) {
 			bzero(st, 2048);
+
 #if _PRODUCT == _hima
       sprintf(st, "%lu, %d,%d,%d,%d,%d,%d,%d,%d, %d,%d,%d,%d,%d,%d,%d,%d\n", getmicro(),
 				cpu[0]->temp, cpu[1]->temp, cpu[2]->temp, cpu[3]->temp, 
