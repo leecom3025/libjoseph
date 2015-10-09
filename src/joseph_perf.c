@@ -35,10 +35,10 @@ void jperf_usage() {
 	JLW("%s", "jperf_record_initme() // if you want to check the time\n");
 }
 
-ssize_t getmicro() {
+uint32_t getmicro() {
     struct timeval curTime;
     gettimeofday(&curTime, NULL);
-    return curTime.tv_sec * (ssize_t) 1000000 + curTime.tv_usec;
+    return curTime.tv_sec * (uint32_t) 1000000 + curTime.tv_usec;
 }
 
 void jperf_start() {
