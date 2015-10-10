@@ -25,6 +25,11 @@ void *threadFunc(void *arg)
 	int *t;
   int n;
   //Joseph_readCPU_alltemps(&t);
+  int c = 123456789;
+  while (c > 0){
+    c %= 3;
+  }
+
   double k = 1234567890;
   while ( k > 0) {
     k /= 3.0;
