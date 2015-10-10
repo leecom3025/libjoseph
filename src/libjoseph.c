@@ -24,11 +24,11 @@ void *threadFunc(void *arg)
 {
 	int *t;
   int n;
-  Joseph_readCPU_alltemps(&t);
-	for (n = 0; n < 4; n++) {
-    printf("CPU%d: %d, ", n, t[n]);
+  //Joseph_readCPU_alltemps(&t);
+  double k = 1234567890;
+  while ( k > 0) {
+    k /= 3.0;
   }
-  printf("\n");
   return NULL;
 }
 
@@ -95,6 +95,23 @@ int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
+
+  while(1){
+		int threads=0;
+		int thread_num =256;
+		pthread_t pth[thread_num];
+
+		for(;threads<thread_num;threads++)
+		{
+			pth[threads] = (pthread_t*) malloc(sizeof(pthread_t));
+			pthread_create(&pth[threads],NULL,threadFunc,"processing...");
+		}
+
+		printf("main waiting for thread to terminate...\n");
+		for (threads = 0; threads < thread_num; threads++ )
+			pthread_join(pth[threads],NULL);
+  }
+
 	struct jcpu **cpu;
 	Joseph_CPU_ops(&cpu);
 

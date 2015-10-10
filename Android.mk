@@ -32,7 +32,7 @@ commonsrc := \
 include $(CLEAR_VARS)
 include $(LOCAL_PATH)/Config.mk
 #LOCAL_MULTILIB := 32
-LOCAL_MODULE := torhmonitor
+LOCAL_MODULE := joseph
 
 ifeq ($(TARGET_PRODUCT), aosp_hammerhead)
 	LOCAL_CFLAGS += -DPRODUCT="hammerhead"
@@ -65,7 +65,8 @@ endif
 
 LOCAL_SRC_FILES := \
 	$(commonsrc) \
-	src/monitor.c
+	src/libjoseph.c
+#	src/monitor.c
 
 LOCAL_C_INCLUDES += \
 	$(LOCAL_PATH)/include
