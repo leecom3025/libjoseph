@@ -70,7 +70,7 @@ extern "C" {
 	*/
 	#ifdef ANDROID /* Thermal unit supported for Android only currently */
 		#if _PRODUCT == _hammerhead
-			#define CPU_OFFSET 6
+			#define CPU_OFFSET 5
 			#define _CPU_NUM 4
 		#elif _PRODUCT == _mako
 			#define CPU_OFFSET 7
