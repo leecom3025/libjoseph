@@ -22,45 +22,45 @@
 
 const char *puts_model = "Time taken: %lu micro-seconds";
 
-void jperf_usage() {
+void libj_perf_usage() {
 #if !defined JPERF_ENABLE
 	JLW("%s", "make sure to -DJPERF_ENABLE=1 in cmake_config\n");
-	JLW("%s", "	or #define JPERF_NEABLE 1 in jperf.h\n");
+	JLW("%s", "	or #define libj_perf_NEABLE 1 in jperf.h\n");
 
 	printf("%s", "make sure to -DJPERF_ENABLE=1 in cmake_config\n");
-	printf("%s", " or #define JPERF_NEABLE 1 in jperf.h\n");
+	printf("%s", " or #define libj_perf_NEABLE 1 in jperf.h\n");
 #endif
-	JLW("%s", "jperf_start()\n\t... do some work\njperf_stop()\n");
-	JLW("%s", "jperf_write(path, header, pattern)\n");
-	JLW("%s", "jperf_record_initme() // if you want to check the time\n");
+	JLW("%s", "libj_perf_start()\n\t... do some work\njperf_stop()\n");
+	JLW("%s", "libj_perf_write(path, header, pattern)\n");
+	JLW("%s", "libj_perf_record_initme() // if you want to check the time\n");
 }
 
-unsigned long getmicro() {
-    struct timeval curTime;
-    gettimeofday(&curTime, NULL);
-    return curTime.tv_sec * (uint64_t) 1000000 + curTime.tv_usec;
+unsigned long libj_perf_getmicro() {
+  struct timeval curTime;
+  gettimeofday(&curTime, NULL);
+  return curTime.tv_sec * (uint64_t) 1000000 + curTime.tv_usec;
 }
 
-void jperf_start() {
+void libj_perf_start() {
 #ifdef JPERF_ENABLE
-	unsigned long curr = getmicro();
+	unsigned long curr = libj_perf_getmicro();
 	jperf = (struct timeMeasure*) malloc(sizeof(struct timeMeasure));
 	jperf->time_start = curr;
 #endif
 }
 
-void jperf_stop() {
+void libj_perf_stop() {
 #ifdef JPERF_ENABLE
-	unsigned long curr = getmicro();
+	unsigned long curr = libj_perf_getmicro();
 	if(!jperf) {
-		JLE("You didn't call jperf_start()!\n\t(a.k.a. YOU ARE STUPID LOL)");
+		JLE("You didn't call libj_perf_start()!\n\t(a.k.a. YOU ARE STUPID LOL)");
 	}
 	jperf->time_end = curr;
 	jperf->time_took = jperf->time_end - jperf->time_start;
 #endif
 }
 
-unsigned long jperf_time() {
+unsigned long libj_perf_time_raw() {
 	unsigned long ret = 0;
 
 #ifdef JPERF_ENABLE
@@ -68,7 +68,7 @@ unsigned long jperf_time() {
 		JLE("ERROR");
 	}
 
-#ifdef JPERF_PUTS
+#ifdef libj_perf_PUTS
 	char* p = (char*)malloc(strlen(puts_model));
 	sprintf(p, puts_model, jperf->time_took);
 	puts (p);
@@ -82,20 +82,29 @@ unsigned long jperf_time() {
 	return ret;
 }
 
-int jperf_record_init(char* filename, char* header) {
+char *libj_perf_time() 
+{
+  char *ret;
+  ret = (char*)malloc(sizeof(unsigned long));
+  sprintf(ret, "%ld", libj_perf_time_raw());
+  return ret;
+}
+
+int libj_perf_record_init(char* filename, char* header) 
+{
 	if (filename == NULL) {
 		JLE("filename is NULL");
 		return -1;
 	}
 
 	if (header == NULL) {
-		JLW("header in jperf_record_init is NULL");
+		JLW("header in libj_perf_record_init is NULL");
 		header = "";
 	}
 
 #ifdef JPERF_ENABLE
 	if (!jperf) {
-		JLE("jperf_record_init() failed");
+		JLE("libj_perf_record_init() failed");
 		return -1;
 	}
 
@@ -109,7 +118,7 @@ int jperf_record_init(char* filename, char* header) {
 	return 0;
 }
 
-int jperf_record_delete(char* filename) {
+int libj_perf_record_delete(char* filename) {
 	if (filename == NULL) {
 		JLE("filename is NULL");
 		return -1;
@@ -126,19 +135,19 @@ int jperf_record_delete(char* filename) {
 	return ret;
 }
 
-int jperf_write(char* filename, char* header, char* pattern) {
+int libj_perf_write(char* filename, char* header, char* pattern) {
 	if (filename == NULL) {
 		JLE("filename is NULL");
 		return -1;
 	}
 
 	if (header == NULL) {
-		JLW("header in jperf_write is NULL");
+		JLW("header in libj_perf_write is NULL");
 		header = "";
 	}
 
 	if (pattern == NULL) {
-		JLW("pattern in jperf_write is NULL");
+		JLW("pattern in libj_perf_write is NULL");
 		header = "";
 	}
 
@@ -149,7 +158,7 @@ int jperf_write(char* filename, char* header, char* pattern) {
 	}
 
 	if (access(filename, F_OK) == -1)
-		jperf_record_init(filename, header);
+		libj_perf_record_init(filename, header);
 	FILE *out = fopen(filename, "a");
 
 	jperf->time_took -= drift;
@@ -162,14 +171,14 @@ int jperf_write(char* filename, char* header, char* pattern) {
 	return 0;
 }
 
-int jperf_record(char* filename, char* at) {
+int libj_perf_record(char* filename, char* at) {
 	if (filename == NULL) {
 		JLE("filename is NULL");
 		return -1;
 	}
 
 	if (at == NULL) {
-		JLW("at in jperf_record is NULL");
+		JLW("at in libj_perf_record is NULL");
 		at = "";
 	}
 
@@ -188,14 +197,14 @@ int jperf_record(char* filename, char* at) {
 	return 0;
 }
 
-int jperf_adjust() {
+int libj_perf_adjust() {
 
 #if defined JPERF_ENABLE && defined ANDROID
 	int i, j, k, iterate = 20;
 	unsigned long shift = 0;
 	double _shift = 0;
-	char *path = "/data/joseph/jperf_adjust";
-	const char *precision_path = "/data/joseph/jperf_precision";
+	char *path = "/data/joseph/libj_perf_adjust";
+	const char *precision_path = "/data/joseph/libj_perf_precision";
 	const int size = 3*1024*1024; // Allocate 3M. Set much larger then L2
 
 	if (access(precision_path, F_OK) != -1) {
@@ -206,11 +215,11 @@ int jperf_adjust() {
 		printf(">> adjusting time drift... (takes ~4 mins)\n");
 
 		for (i = 0; i < iterate; i++) {
-			jperf_start();
+			libj_perf_start();
 				sleep(1);
-			jperf_stop();
-			jperf_write(path, "Job\tTaken", "Sleep:\t");
-			shift += (jperf_time() - 1000000);
+			libj_perf_stop();
+			libj_perf_write(path, "Job\tTaken", "Sleep:\t");
+			shift += (libj_perf_time_raw() - 1000000);
 
 			char *c = (char *) malloc(size); //cache flush
 			for (k = 0; k < 0xff; k++)
@@ -220,7 +229,7 @@ int jperf_adjust() {
 
 		}
 
-		jperf_record_delete(path);
+		libj_perf_record_delete(path);
 		_shift = (((double)shift) / iterate);
 
 		FILE *out = fopen(precision_path, "w");

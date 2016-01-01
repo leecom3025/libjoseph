@@ -3,48 +3,51 @@ libJoseph
 libJoseph is a lightweight library to provide high-level abstraction of POSIX system calls. 
 ```git
 git clone https://github.com/forkjoseph/libjoseph external/libjoseph
+make
+sudo make install
 ```
 
 ## APIs
+The convention is "libj_[prefix]" expect util is "libj_[operation]"
 * joseph_utils
-	- Joseph_get[Path,Int,String,Double,Float]
-	- Joseph_set[Int,String,Double,Float]
-	- Joseph_appendString
-	- Joseph_resetFile
-	- Joseph_readCPU_temp
-	- Joseph_readCPU_util
-	- Joseph_readCPU_freq
+	- libj_get[Path,Int,String,Double,Float]
+	- libj_set[Int,String,Double,Float]
+	- libj_appendString
+	- libj_resetFile
+	- libj_readCPU_temp
+	- libj_readCPU_util
+	- libj_readCPU_freq
 * joseph_perf
-	- jperf_[start,stop,time]
-	- jperf_record_[init,delete]
-	- jperf_[write,record]
-	- jperf_adjust
-	- jperf_usage
+	- libj_perf_[start,stop,time]
+	- libj_perf_record_[init,delete]
+	- libj_perf_[write,record]
+	- libj_perf_adjust
+	- libj_perf_usage
 
 ## Examples
-Joseph_getString:
+libj_getString:
 ```C++
 char *model;
-if (Joseph_getString("model", &model) < 0) //read "/data/joseph/model"
+if (libj_getString("model", &model) < 0) //read "/data/joseph/model"
 	perror(strerror(errno));
 ```
 jperf: 
 ```C++
-jperf_adjust(); // adjust drift for high precision
-jperf_start();
+libj_perf_adjust(); // adjust drift for high precision
+libj_perf_start();
 	// ... do some work
-jperf_stop();
-jperf_write("/data/joseph/jperf_data", "Job\tTime", "work:\t");
-JLD("%ld\n", jperf_time()); // print
+libj_perf_stop();
+libj_perf_write("/data/joseph/jperf_data", "Job\tTime", "work:\t");
+JLD("%ld\n", libj_perf_time()); // print
 ```
-Joseph_readCPU_alltemps:
+libj_readCPU_alltemps:
 ```C++
 int *temperature;
-if (Joseph_readCPU_alltemps(&temperature) < 0) 
+if (libj_readCPU_alltemps(&temperature) < 0) 
   perror(strerror(errno));
 for (i = 0; i < CPU_NUM; i++) 
   printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
-if (Joseph_readCPU_alltemps_free(&temperature) < 0) 
+if (libj_readCPU_alltemps_free(&temperature) < 0) 
   perror(strerror(errno));
 ```
 

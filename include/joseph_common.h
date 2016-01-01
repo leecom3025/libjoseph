@@ -18,6 +18,23 @@
 	#define _GNU_SOURCE
 #endif
 
+#ifdef TERM 
+	#define TEMRS_OF_POLICY \
+	"/*\n"\
+	" * Copyright (C) 2015 HyunJong Joseph Lee, Korvo, CERCS,\n"\
+	" *	\tGeorgia Institute of Technology\n"\
+	" *\n"\
+	" * Unless required by applicable law or agreed to in writing, software\n"\
+	" * distributed under the License is distributed on an \"AS IS\" BASIS,\n"\
+	" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n"\
+	" * See the License for the specific language governing permissions and\n"\
+	" * limitations under the License.\n"\
+	" */\n\n"
+#else
+	#define TEMRS_OF_POLICY \
+	""
+#endif
+
 #ifdef ANDROID
   #include <cutils/properties.h>
   #include <android/log.h>

@@ -20,31 +20,34 @@
   #include "joseph_net.h"
 #endif
 /*
- *	Jnet_init
- *	Jnet_prep
- * 	Jnet_send/recv
- * 	Jnet_done
+ *	libj_net_init
+ *	libj_net_prep
+ * 	libj_net_send/recv
+ * 	libj_net_done
  *
  */ 
 
 /* 
  * 
  */
-int Jnet_init(struct Jsocket **sck, int type) {
+int libj_net_init(struct Jsocket **sck, int type) {
 	if (sck == NULL || type < 0)
 		return -1;
 
-	struct Jsocket *ptr = malloc(sizeof(Jsocket));
-	ptr->type = type;
+  int socket_type;
+  struct Jsocket *ptr;
 
-	int socket_type = 0;
+  ptr = malloc(sizeof(Jsocket));
+  ptr->type = type;
+
 	if (ptr->type == JNET_TCP)
 		socket_type = SOCK_STREAM;
 	else if (ptr->type == JNET_UDP)
 		socket_type = SOCK_DGRAM;
 
-	if ( (ptr->socket = socket(AF_INET, socket_type, 0)) == -1) 
-		JNET_ERR(ptr);
+  if ((ptr->socket = socket(AF_INET, socket_type, 0)) == -1)
+    JNET_ERR(ptr);
+
 
 	setsockopt(ptr->socket, SOL_SOCKET, SO_REUSEADDR, &(ptr->socket), sizeof(int));
 	ptr->si_len = sizeof(struct sockaddr_in);
@@ -60,7 +63,7 @@ int Jnet_init(struct Jsocket **sck, int type) {
  *
  * 
  */ 
-int Jnet_prep(struct Jsocket **sck, int role, int *port, char *addr) {
+int libj_net_prep(struct Jsocket **sck, int role, int *port, char *addr) {
 	if (sck == NULL || role < 0 || port == NULL || *port < 0)
 		return -1;
 
@@ -96,7 +99,7 @@ int Jnet_prep(struct Jsocket **sck, int role, int *port, char *addr) {
 	return 0;
 }
 
-int Jnet_done(struct Jsocket **sck) {
+int libj_net_done(struct Jsocket **sck) {
 	struct Jsocket *ptr = *sck;
 
 	if (ptr->socket > 0) 
@@ -108,7 +111,7 @@ int Jnet_done(struct Jsocket **sck) {
 	return 0;
 }
 
-int Jnet_send(struct Jsocket **sck, char **msg) {
+int libj_net_send(struct Jsocket **sck, char **msg) {
 	if (sck == NULL || msg == NULL)
 		return -1;
 
@@ -142,7 +145,7 @@ int Jnet_send(struct Jsocket **sck, char **msg) {
 } 
 
 
-int Jnet_recv(struct Jsocket **sck, char **buffer, size_t len) {
+int libj_net_recv(struct Jsocket **sck, char **buffer, size_t len) {
 	if (sck == NULL || buffer == NULL || len == 0)
 		return -1;
 
@@ -151,16 +154,14 @@ int Jnet_recv(struct Jsocket **sck, char **buffer, size_t len) {
 	char *_buf;
 	struct sockaddr _client;
 
-	if (ptr->role == JNET_CLIENT || ptr->type == JNET_UDP) {
+	if (ptr->role == JNET_CLIENT || ptr->type == JNET_UDP) 
 		socket = ptr->socket;
-	} else if (ptr->role == JNET_SERVER) {
+	else if (ptr->role == JNET_SERVER) 
 		socket = ptr->client;
-	} else {
+	else
 		JNET_ERR(ptr);
-	}
 
 	_buf = (char*) malloc(len);
-
 	switch (ptr->type) {
 		case JNET_TCP:
       if (recv(socket, _buf, len, 0) < 0)

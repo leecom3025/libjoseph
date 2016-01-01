@@ -20,11 +20,12 @@
   #include "libjoseph.h"
 #endif
 
+#if 0
 void *threadFunc(void *arg)
 {
 	int *t;
   int n;
-  //Joseph_readCPU_alltemps(&t);
+  //libj_readCPU_alltemps(&t);
   int c = 123456789;
   while (c > 0){
     c %= 3;
@@ -37,123 +38,31 @@ void *threadFunc(void *arg)
   return NULL;
 }
 
-void showThermal()
+void whileFunc(int thrds)
 {
-	int *temperature;
-	int i, cpu = 4;
-	Joseph_readCPU_alltemps(&temperature);
-#if 0
-	for ( i = 0; i < cpu; i++)
-		printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
+  while(1)
+  {
+    int threads, thread_num = thrds;
+    pthread_t pth[thread_num];
+
+    for(;threads<thread_num;threads++)
+    {
+      pth[threads] = (pthread_t*) malloc(sizeof(pthread_t));
+      pthread_create(&pth[threads],NULL,threadFunc,"processing...");
+    }
+
+    printf("main waiting for thread to terminate...\n");
+    for (threads = 0; threads < thread_num; threads++ )
+      pthread_join(pth[threads],NULL);
+  }
+}
 #endif
-	printf("%d\t%d\t%d\t%d\n", *(temperature), *(temperature+1),
-		*(temperature+2), *(temperature+3));
-	Joseph_readCPU_alltemps_free(&temperature);
-	return;	
-}
-
-void showUtil()
-{
-	int *util;
-	int i, cpu;
-	Joseph_readCPU_allutils(&util, &cpu);
-	for (i = 0; i < cpu; i++) 
-		printf("\t%d", *(util+i));
-	printf("\n");
-
-	//printf("%d\t%d\t%d\t%d\n", *util, *(util+1), *(util+2), *(util+3));
-	Joseph_readCPU_allutils_free(&util);
-	return;
-}
-
-void show() {
-	int *util, *freq, *temp;
-	int i, mCpu, cpu = 4;
-	char st[2048];
-	Joseph_readCPU_alltemps(&temp);
-	Joseph_readCPU_both(&util, &freq, &mCpu);
-
-	sprintf(st, "%d, %d, %d, %d [ ", *temp, *(temp+1), *(temp+2), *(temp+3));
-
-	for (i=0; i < mCpu; i++) {
-		if (*(freq+i) < 2265600){ 
-			char mBuff[64];
-
-			sprintf(mBuff, "%d(%d) ", *(util+i), *(freq+i));
-			strcat(st, mBuff);
-		} else
-			strcat(st, "*(*) ");
-	}
-	strcat(st, "]");
-	
-	ALOGD("%s",st);
-	Joseph_readCPU_alltemps_free(&temp);
-	Joseph_readCPU_both_free(&util, &freq);
-	
-	//showThermal();
-	//showUtil();
-
-	return;
-}
 
 int main (int argc, char* argv[]) {
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
-
-  while(1){
-		int threads=0;
-		int thread_num =256;
-		pthread_t pth[thread_num];
-
-		for(;threads<thread_num;threads++)
-		{
-			pth[threads] = (pthread_t*) malloc(sizeof(pthread_t));
-			pthread_create(&pth[threads],NULL,threadFunc,"processing...");
-		}
-
-		printf("main waiting for thread to terminate...\n");
-		for (threads = 0; threads < thread_num; threads++ )
-			pthread_join(pth[threads],NULL);
-  }
-
-	struct jcpu **cpu;
-	Joseph_CPU_ops(&cpu);
-
-	while(1)
-	{
-		//sleep(1);
-		usleep(10000);
-		if (Joseph_CPU_read(cpu) != -1) {
-			int i;
-			char st[2048];
-			char temp[512], util[512], freq[512];
-			sprintf(st, "%d, %d, %d, %d [%d(%d) %d(%d) %d(%d) %d(%d)]\n",
-				cpu[0]->temp, cpu[1]->temp, cpu[2]->temp, cpu[3]->temp, 
-				cpu[0]->util, cpu[0]->freq, cpu[1]->util, cpu[1]->freq,
-				cpu[2]->util, cpu[2]->freq, cpu[3]->util, cpu[3]->freq);
-			ALOGD("%s", st);
-		}
-//		show();
-		
-		#if 0 
-		int threads=0;
-		int thread_num =1;
-		pthread_t pth[thread_num];
-
-		for(;threads<thread_num;threads++)
-		{
-			pth[threads] = (pthread_t*) malloc(sizeof(pthread_t));
-			pthread_create(&pth[threads],NULL,threadFunc,"processing...");
-		}
-
-		printf("main waiting for thread to terminate...\n");
-		for (threads = 0; threads < thread_num; threads++ )
-			pthread_join(pth[threads],NULL);
-		#endif
-	}
-
-#if 0
+  
 #if defined ANDROID && defined PRODUCT
 	printf("Product is ");
 	if (strcmp(PRODUCT, hammerhead) == 0)
@@ -169,32 +78,36 @@ int main (int argc, char* argv[]) {
 	char *string_test, *path;
 	double double_test;
 	float float_test;
-
-	Joseph_getInt("int_test", &int_test);
+  
+  libj_perf_start();
+	libj_getInt("int_test", &int_test);
 	printf("Int: %d\n", int_test);
+  libj_perf_stop();
+  printf("%s\n", libj_perf_time());
 
-	Joseph_getString("string_test", &string_test);
+
+	libj_getString("string_test", &string_test);
 	printf("%s", string_test);
 
-	Joseph_getDouble("double_test", &double_test);
+	libj_getDouble("double_test", &double_test);
 	printf("Double: %f\n", double_test);
 
-	Joseph_getFloat("float_test", &float_test);
+	libj_getFloat("float_test", &float_test);
 	printf("Float: %lf\n", float_test);
 
-	Joseph_getPath("jperf_test", &path);
+	libj_getPath("libj_perf_test", &path);
 	printf("Path: %s\n", path);
 	JLT("JUtils passed!");
 
 	JLT("======= joseph_perf test =======");
-	jperf_usage();
+	libj_perf_usage();
 
-	jperf_adjust();
-	jperf_start();
+	libj_perf_adjust();
+	libj_perf_start();
 		sleep(1);
-	jperf_stop();
-	jperf_write(path, "Job\tTaken", "Sleep:\t");
-	printf("%ld\n", jperf_time());
+	libj_perf_stop();
+	libj_perf_write(path, "Job\tTaken", "Sleep:\t");
+	printf("%ld\n", libj_perf_time_raw());
 	JLT("JPerf passed!");
 
 #if defined WITH_ZMQ
@@ -218,29 +131,29 @@ int main (int argc, char* argv[]) {
 	int online, kk;
 	int *temperature, *utils, *freqs;
 
-	Joseph_readCPU_alltemps(&temperature);
+	libj_readCPU_alltemps(&temperature);
 	for (i = 0; i < CPU_NUM; i++) {
 		printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
 	}
-	Joseph_readCPU_alltemps_free(&temperature);
+	libj_readCPU_alltemps_free(&temperature);
 
-	Joseph_readCPU_allutils(&utils, &online);
+	libj_readCPU_allutils(&utils, &online);
 	for (i = 0; i < online; i++) {
 		printf("CPU %d util: %d%%\n", i, *(utils + i));
 	}
-	Joseph_readCPU_allutils_free(&utils);
+	libj_readCPU_allutils_free(&utils);
 
-	Joseph_readCPU_allfreqs(&freqs, &online);
+	libj_readCPU_allfreqs(&freqs, &online);
 	for (i = 0; i < online; i++) {
 		printf("CPU %d freq: %dHz\n", i, *(freqs + i));
 	}
-	Joseph_readCPU_allfreqs_free(&freqs);
+	libj_readCPU_allfreqs_free(&freqs);
 
-	Joseph_readCPU_both(&utils, &freqs, &online);
+	libj_readCPU_both(&utils, &freqs, &online);
 	for (i = 0; i < online; i++) {
 		printf("CPU %d: (%d%%, %dHz)\n", i, *(utils + i), *(freqs + i));
 	}
-	Joseph_readCPU_both_free(&utils, &freqs);
+	libj_readCPU_both_free(&utils, &freqs);
 	JLT("JTherm passed!");
 #endif
 
@@ -249,30 +162,30 @@ int main (int argc, char* argv[]) {
 	int port = 30331;
 	int pid = fork();
 	if (pid > 0) { // parent
-		if (Jnet_init(&sck, JNET_TCP) < 0) 
-			JLE("Jnet_init");
-		if (Jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
-			JLE("Jnet_prep");
+		if (libj_net_init(&sck, JNET_TCP) < 0) 
+			JLE("libj_net_init");
+		if (libj_net_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
+			JLE("libj_net_prep");
 		char *msg;
-		if (Jnet_recv(&sck, &msg, 255) < 0)
-			JLE("Jnet_recv");
-		if (Jnet_send(&sck, &msg) < 0)
-			JLE("Jnet_send");
-		if (Jnet_done(&sck) < 0)
-			JLE("Jnet_done");
-		JLT("Jnet_TCP passed!");
+		if (libj_net_recv(&sck, &msg, 255) < 0)
+			JLE("libj_net_recv");
+		if (libj_net_send(&sck, &msg) < 0)
+			JLE("libj_net_send");
+		if (libj_net_done(&sck) < 0)
+			JLE("libj_net_done");
+		JLT("libj_net_TCP passed!");
 	} else if (pid == 0) { // child 
-		if (Jnet_init(&sck, JNET_TCP) < 0) 
-			JLE("Jnet_init");
-		if (Jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
-			JLE("Jnet_prep");
+		if (libj_net_init(&sck, JNET_TCP) < 0) 
+			JLE("libj_net_init");
+		if (libj_net_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
+			JLE("libj_net_prep");
 		char *msg = "TEST SUCCESS";
-		if (Jnet_send(&sck, &msg) < 0) 
-			JLE("Jnet_send");
-		if (Jnet_recv(&sck, &msg, strlen(msg)) < 0)
-			JLE("Jnet_recv");
-		if (Jnet_done(&sck) < 0)
-			JLE("Jnet_done");
+		if (libj_net_send(&sck, &msg) < 0) 
+			JLE("libj_net_send");
+		if (libj_net_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("libj_net_recv");
+		if (libj_net_done(&sck) < 0)
+			JLE("libj_net_done");
 		return 0; // kill child
 	} else {
 		JLE("fork() failed");
@@ -282,32 +195,32 @@ int main (int argc, char* argv[]) {
 	sleep(1);
 	pid = fork();
 	if (pid > 0) { // parent
-		if (Jnet_init(&sck, JNET_UDP) < 0) 
-			JLE("Jnet_init");
-		if (Jnet_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
-			JLE("Jnet_prep");
+		if (libj_net_init(&sck, JNET_UDP) < 0) 
+			JLE("libj_net_init");
+		if (libj_net_prep(&sck, JNET_SERVER, &port, NULL) < 0) 
+			JLE("libj_net_prep");
 		char *msg;
-		if (Jnet_recv(&sck, &msg, strlen(msg)) < 0)
-			JLE("Jnet_recv");
-		if (Jnet_send(&sck, &msg) < 0)
-			JLE("Jnet_send");
-		if (Jnet_done(&sck) < 0)
-			JLE("Jnet_done");
-		JLT("Jnet_UDP passed!");
+		if (libj_net_recv(&sck, &msg, strlen(msg)) < 0)
+			JLE("libj_net_recv");
+		if (libj_net_send(&sck, &msg) < 0)
+			JLE("libj_net_send");
+		if (libj_net_done(&sck) < 0)
+			JLE("libj_net_done");
+		JLT("libj_net_UDP passed!");
 	} else if (pid == 0) { // child 
-		if (Jnet_init(&sck, JNET_UDP) < 0) 
-			JLE("Jnet_init");
-		if (Jnet_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
-			JLE("Jnet_prep");
+		if (libj_net_init(&sck, JNET_UDP) < 0) 
+			JLE("libj_net_init");
+		if (libj_net_prep(&sck, JNET_CLIENT, &port, "127.0.0.1") < 0) 
+			JLE("libj_net_prep");
 		char *msg = "TEST SUCCESS";
-		if (Jnet_send(&sck, &msg) < 0) 
-			JLE("Jnet_send");
-		if (Jnet_done(&sck) < 0)
-			JLE("Jnet_done");
+		if (libj_net_send(&sck, &msg) < 0) 
+			JLE("libj_net_send");
+		if (libj_net_done(&sck) < 0)
+			JLE("libj_net_done");
 		return 0; // kill child
 	} else {
 		JLE("fork() failed");
 	}
-#endif
 	return 0;
 }
+

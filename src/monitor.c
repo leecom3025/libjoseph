@@ -32,11 +32,11 @@ int main (int argc, char *argv[]) {
 	
   char st[2048];
 	struct jcpu **cpu;
-	Joseph_CPU_ops(&cpu);
+	libj_CPU_ops(&cpu);
 
 	while(1) {
 		usleep(period);
-		if (Joseph_CPU_read(cpu) != -1) {
+		if (libj_CPU_read(cpu) != -1) {
 			bzero(st, 2048);
 
 #if _PRODUCT == _hima

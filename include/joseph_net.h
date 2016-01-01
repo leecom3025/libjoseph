@@ -35,10 +35,12 @@
 
 #include "joseph_common.h"
 
-#define JNET_UDP 		0x1
-#define JNET_TCP		0x2
-// #define JNET_BL2E		0x3
+// type of packets
+#define JNET_UDP 		        0x1
+#define JNET_TCP		        0x2
+#define JNET_BL2E		        0x3
 
+// role of program
 #define JNET_UNKNOWN	0x0
 #define JNET_SERVER 	0x1
 #define JNET_CLIENT 	0x2
@@ -67,11 +69,11 @@ struct Jsocket {
 #ifdef __cplusplus
 extern "C" {
 #endif
-	int Jnet_init(struct Jsocket **sck, int type);
-	int Jnet_prep(struct Jsocket **sck, int role, int *port, char *addr);
-	int Jnet_done(struct Jsocket **sck);
-	int Jnet_send(struct Jsocket **sck, char **msg);
-	int Jnet_recv(struct Jsocket **sck, char **buf, size_t len);
+	int libj_net_init(struct Jsocket **, int type);
+	int libj_net_prep(struct Jsocket **, int role, int *port, char *addr);
+	int libj_net_done(struct Jsocket **);
+	int libj_net_send(struct Jsocket **, char **msg);
+	int libj_net_recv(struct Jsocket **, char **buf, size_t len);
 #ifdef __cplusplus
 }
 #endif

@@ -33,21 +33,21 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+  
+	int libj_getPath(char* arg, char** result);
 
-	int Joseph_getPath(char* arg, char** result);
+	int libj_getInt(char *arg, int *data);
+	int libj_getString(char *arg, char **result);
+	int libj_getDouble(char *arg, double *data);
+	int libj_getFloat(char *arg, float *data);
 
-	int Joseph_getInt(char *arg, int *data);
-	int Joseph_getString(char *arg, char **result);
-	int Joseph_getDouble(char *arg, double *data);
-	int Joseph_getFloat(char *arg, float *data);
+	int libj_setInt(char *arg, int value);
+	int libj_setString(char *arg, char *value);
+	int libj_setDouble(char *arg, double value);
+	int libj_setFloat(char *arg, float data);
 
-	int Joseph_setInt(char *arg, int value);
-	int Joseph_setString(char *arg, char *value);
-	int Joseph_setDouble(char *arg, double value);
-	int Joseph_setFloat(char *arg, float data);
-
-	int Joseph_appendString(char *arg, char **value);
-	int Joseph_resetFile(char *arg);
+	int libj_appendString(char *arg, char **value);
+	int libj_resetFile(char *arg);
 
 	/* 
 	(CPU_OFFSET | CPU)
@@ -93,16 +93,16 @@ extern "C" {
 	/* Thermal read/write */
 	static const ssize_t CPU_NUM = _CPU_NUM;
 
-//	int Joseph_CPU_init(struct jcpu *, int);
-	extern int Joseph_CPU_ops(struct jcpu ***);
-	extern int Joseph_CPU_read(struct jcpu **);
-	int Joseph_CPU_online(struct jcpu *);
-	extern int Joseph_Thermal_read(struct jcpu *);
-	extern int Joseph_Util_read(struct jcpu *);
-	extern int Joseph_Freq_read(struct jcpu *);
-  extern int Joseph_Freq_stat(struct jcpu *);
-	extern int Joseph_UtilFreq_read(struct jcpu *);
-	extern int Joseph_All_read(struct jcpu *);
+//	int libj_CPU_init(struct jcpu *, int);
+	extern int libj_CPU_ops(struct jcpu ***);
+	extern int libj_CPU_read(struct jcpu **);
+	int libj_CPU_online(struct jcpu *);
+	extern int libj_Thermal_read(struct jcpu *);
+	extern int libj_Util_read(struct jcpu *);
+	extern int libj_Freq_read(struct jcpu *);
+  extern int libj_Freq_stat(struct jcpu *);
+	extern int libj_UtilFreq_read(struct jcpu *);
+	extern int libj_All_read(struct jcpu *);
 
 	#endif // ANDROID
 

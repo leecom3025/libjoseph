@@ -4,7 +4,7 @@ WARM = -Wall -Wno-unused-variable \
 			 -Wno-unused-but-set-variable \
 			 -Wno-format-contains-nul
 ARCH = -DX86=1
-ENABLE = -DJPERF_ENABLE=1 \
+ENABLE = -DJPERF_ENABLE=1 #\
 				 -DWITH_ZMQ=1
 CFLAGS = $(ARCH) $(ENABLE) \
 				 $(DEBUG) $(WARM)

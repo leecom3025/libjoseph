@@ -43,19 +43,21 @@ static const char *CPU_TEMP
   #warning TODO:finish x86 thermal monitor support
 #endif 
 
-
 #if defined HOST_ANDROID
   #define TORH_ANDROID 1
 #endif
+
+
 /*
  * Param: 
  *  (filename, pointer to char)
  * Usage:
  *  char *path;
- *  if (Joseph_getPath("version", &path) < 0)
+ *  if (libj_getPath("version", &path) < 0)
  *    perror(strerror(errno));
+ *  print("path is %s", path); // path is /tmp/joseph/version
  */
-int Joseph_getPath(char *arg, char **result) {
+int libj_getPath(char *arg, char **result) {
 #if defined HOST_ANDROID
   return 0;
 #endif
@@ -66,8 +68,7 @@ int Joseph_getPath(char *arg, char **result) {
 
   int len = strlen(DEFAULT_PATH);
   if ((len += strlen(arg)) > 255) {
-    JLE("ERROR: %s%zu%s", "path is too long (",
-     strlen(arg), ")");
+    JLE("ERROR: %s%zu%s", "path is too long (", strlen(arg), ")");
     return -1;
   }
 
@@ -76,22 +77,28 @@ int Joseph_getPath(char *arg, char **result) {
   return 0;
 }
 
+
+// set default path
+int libj_setDPath(char *arg){
+  return 0;
+}
+
 /*
  * Param: 
  * 	(filename, pointer to Int)
  * Usage:
  * 	int data;
- * 	if (Joseph_getInt("version", &data) < 0)
+ * 	if (libj_getInt("version", &data) < 0)
  *		perror(strerror(errno));
  */
-int Joseph_getInt(char *arg, int *data) {
+int libj_getInt(char *arg, int *data) {
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE *fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "r");
@@ -105,7 +112,7 @@ int Joseph_getInt(char *arg, int *data) {
   return 0;
 }
 
-int Joseph_getString(char *arg, char **result) {
+int libj_getString(char *arg, char **result) {
 #if defined HOST_ANDROID
   return 0;
 #endif
@@ -114,7 +121,7 @@ int Joseph_getString(char *arg, char **result) {
   char mTemp[256];
   memset(mTemp, 0, sizeof(mTemp));
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = open(path, O_RDWR);
@@ -131,14 +138,14 @@ int Joseph_getString(char *arg, char **result) {
   return 0;
 }
 
-int Joseph_getDouble(char *arg, double *data){
+int libj_getDouble(char *arg, double *data){
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE *fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "r");
@@ -153,14 +160,14 @@ int Joseph_getDouble(char *arg, double *data){
   return 0;
 }
 
-int Joseph_getFloat(char *arg, float *data){
+int libj_getFloat(char *arg, float *data){
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE *fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "r");
@@ -175,14 +182,14 @@ int Joseph_getFloat(char *arg, float *data){
   return 0;
 }
 
-int Joseph_setInt(char *arg, int value) {
+int libj_setInt(char *arg, int value) {
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE* fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "w+");
@@ -195,14 +202,14 @@ int Joseph_setInt(char *arg, int value) {
   return 0;
 }
 
-int Joseph_setString(char *arg, char *value) {
+int libj_setString(char *arg, char *value) {
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE* fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "w+");
@@ -215,14 +222,14 @@ int Joseph_setString(char *arg, char *value) {
   return 0;
 }
 
-int Joseph_setDouble(char *arg, double value) {
+int libj_setDouble(char *arg, double value) {
 #if defined HOST_ANDROID
   return 0;
 #endif
 	FILE* fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
 	fd = fopen(path, "w+");
@@ -235,14 +242,14 @@ int Joseph_setDouble(char *arg, double value) {
 	return 0;
 }
 
-int Joseph_setFloat(char *arg, float value) {
+int libj_setFloat(char *arg, float value) {
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE* fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "w+");
@@ -255,14 +262,14 @@ int Joseph_setFloat(char *arg, float value) {
   return 0;
 }
 
-int Joseph_appendString(char *arg, char **value) {
+int libj_appendString(char *arg, char **value) {
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE* fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "a+");
@@ -275,14 +282,14 @@ int Joseph_appendString(char *arg, char **value) {
   return 0;
 }
 
-int Joseph_resetFile(char *arg) {
+int libj_resetFile(char *arg) {
 #if defined HOST_ANDROID
   return 0;
 #endif
   FILE* fd;
   char *path;
 
-  if (Joseph_getPath(arg, &path) < 0)
+  if (libj_getPath(arg, &path) < 0)
     return -1;
 
   fd = fopen(path, "w+");
@@ -298,7 +305,7 @@ int Joseph_resetFile(char *arg) {
 /* Thermal unit supported for Android only currently */
 #if defined ANDROID 
 
-int Joseph_CPU_init(struct jcpu **c, int id) {
+int libj_CPU_init(struct jcpu **c, int id) {
   char *fileName;
   struct jcpu *cpu;
 	cpu = (struct jcpu *) malloc(sizeof(jcpu));
@@ -322,13 +329,13 @@ done:
     return -1;
   sprintf(fileName, CPU_TIME, cpu->id);
   cpu->stat_path = fileName;
-  Joseph_Freq_stat_init(cpu);
+  libj_Freq_stat_init(cpu);
 #endif
   *c = cpu;
 	return 0;
 }
 
-int Joseph_CPU_ops(struct jcpu ***cpu) {
+int libj_CPU_ops(struct jcpu ***cpu) {
   int i;
 	struct jcpu **tCpu;
 	ssize_t len = sizeof(struct jcpu*);
@@ -338,27 +345,27 @@ int Joseph_CPU_ops(struct jcpu ***cpu) {
 	for (i = 0; i < CPU_NUM; i++) {
 		struct jcpu *holder;
     holder = tCpu[i];
-		Joseph_CPU_init(&holder, i);
+		libj_CPU_init(&holder, i);
 		tCpu[i] = holder;
 	}
 	*cpu = tCpu;
 	return 0;
 }
 
-int Joseph_CPU_read(struct jcpu **cpu) {
+int libj_CPU_read(struct jcpu **cpu) {
 	int i;
   size_t len = sizeof(struct jcpu*);
 
 	for (i = 0; i < CPU_NUM; i++){
 		struct jcpu *holder;
 		holder = cpu[i];
-		Joseph_All_read(holder);
+		libj_All_read(holder);
 	}
 
 	return 0;
 }
 
-int Joseph_CPU_online(struct jcpu *cpu) {
+int libj_CPU_online(struct jcpu *cpu) {
 	FILE *pFile;
 	char *mFileName;
 	ssize_t mOnline = 0;
@@ -383,7 +390,7 @@ done:
 	return 0;
 }
 
-int Joseph_Thermal_read(struct jcpu *cpu) {
+int libj_Thermal_read(struct jcpu *cpu) {
 	FILE *pFile;
 	char *mFileName;
 	ssize_t cnum = CPU_OFFSET + cpu->id;
@@ -410,12 +417,12 @@ int Joseph_Thermal_read(struct jcpu *cpu) {
 	return 0;
 }
 
-int Joseph_Util_read(struct jcpu *cpu) {
+int libj_Util_read(struct jcpu *cpu) {
 #if _PRODUCT == _hima
   int result = 0;
 
   setpriority(PRIO_PROCESS, 0, -20);
-  result = Joseph_Freq_stat(cpu);
+  result = libj_Freq_stat(cpu);
   setpriority(PRIO_PROCESS, 0, 0);
 
   return result;
@@ -448,7 +455,7 @@ done:
 	return 0;
 }
 
-int Joseph_Freq_read(struct jcpu *cpu) {
+int libj_Freq_read(struct jcpu *cpu) {
 	FILE *pFile = NULL;
 	char *mFileName = NULL;
 	int32_t mFreq = 0;
@@ -477,11 +484,11 @@ done:
 	return 0;
 }
 
-int Joseph_Freq_stat_get(struct freq_str *freq){
+int libj_Freq_stat_get(struct freq_str *freq){
   return 0;
 }
 
-int Joseph_Freq_stat_init(struct jcpu *cpu){
+int libj_Freq_stat_init(struct jcpu *cpu){
   FILE *fp;
   char *fileName, *line = NULL;
   size_t len = 0;
@@ -505,7 +512,7 @@ int Joseph_Freq_stat_init(struct jcpu *cpu){
   return 0; 
 }
 
-int Joseph_Freq_stat_read(struct jcpu *cpu){
+int libj_Freq_stat_read(struct jcpu *cpu){
   FILE *fp;
   char *fileName, *line = NULL;
   size_t len = 0;
@@ -544,38 +551,38 @@ int Joseph_Freq_stat_read(struct jcpu *cpu){
   return 0; 
 }
 
-int Joseph_Freq_stat(struct jcpu *cpu) 
+int libj_Freq_stat(struct jcpu *cpu) 
 {
 #if _PRODUCT != _hima
   return -1;
 #endif
 //  printf("Reading cpu %d:\n", cpu->id); 
-  Joseph_Freq_stat_read(cpu);
+  libj_Freq_stat_read(cpu);
 
   return 0; 
 }
 
-int Joseph_UtilFreq_read(struct jcpu *cpu) {
-	if (Joseph_CPU_online(cpu) == -1) {
+int libj_UtilFreq_read(struct jcpu *cpu) {
+	if (libj_CPU_online(cpu) == -1) {
 		cpu->online = -1;
 		return -1;
 	}
 
-/*	if (Joseph_Util_read(cpu) == -1) {
+/*	if (libj_Util_read(cpu) == -1) {
 		cpu->util = -1;
 	}
 */
-	if (Joseph_Freq_read(cpu) == -1) {
+	if (libj_Freq_read(cpu) == -1) {
 		cpu->freq = -1;
 	}
 
 	return 0;
 }
 
-int Joseph_All_read(struct jcpu *cpu) {
+int libj_All_read(struct jcpu *cpu) {
 	ssize_t result = 0;
-	result = Joseph_Thermal_read(cpu);
-	result = Joseph_UtilFreq_read(cpu);
+	result = libj_Thermal_read(cpu);
+	result = libj_UtilFreq_read(cpu);
 
 	return result == 0 ? 0 : -1;
 }

@@ -37,34 +37,7 @@
 
 #include "joseph_common.h"
 
-// #define JPERF_ENABLE 1
-// #define TERM
-// #define JPERF_PRECISION 100 /* adjust time to write */
-
-#ifdef TERM 
-	#define TEMRS_OF_POLICY \
-	"/*\n"\
-	" * Copyright (C) 2015 HyunJong Joseph Lee, Korvo, CERCS,\n"\
-	" *	\tGeorgia Institute of Technology\n"\
-	" *\n"\
-	" * Unless required by applicable law or agreed to in writing, software\n"\
-	" * distributed under the License is distributed on an \"AS IS\" BASIS,\n"\
-	" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n"\
-	" * See the License for the specific language governing permissions and\n"\
-	" * limitations under the License.\n"\
-	" */\n\n"
-#else
-	#define TEMRS_OF_POLICY \
-	""
-#endif
-
-// usage 
-// jperf_adjust() // adjust drift for high precision
-// jperf_start() 
-// 		... do some work
-// jperf_stop()
-// jperf_write(path, header, pattern)
-// jperf_time() 	
+// #define libj_perf_PRECISION 100 /* adjust time to write */
 
 typedef struct timeMeasure {
 	unsigned long time_start;
@@ -78,19 +51,20 @@ static double drift;
 #ifdef __cplusplus
 extern "C" {
 #endif
-	void jperf_usage();
+	void libj_perf_usage();
 
-	unsigned long getmicro();
-	void jperf_start();
-	void jperf_stop();
-	unsigned long jperf_time();
+	unsigned long libj_perf_getmicro();
+	void libj_perf_start();
+	void libj_perf_stop();
+	unsigned long libj_perf_time_raw();
+	char* libj_perf_time();
 
-	int jperf_record_init(char *filename, char *header);
-	int jperf_record_delete(char *filename);
-	int jperf_write(char *filename, char *header, char *pattern);
-	int jperf_record(char *filename, char *at);
+	int libj_perf_record_init(char *filename, char *header);
+	int libj_perf_record_delete(char *filename);
+	int libj_perf_write(char *filename, char *header, char *pattern);
+	int libj_perf_record(char *filename, char *at);
 
-	int jperf_adjust();
+	int libj_perf_adjust();
 
 #ifdef __cplusplus
 }
