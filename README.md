@@ -23,32 +23,57 @@ The convention is "libj_[prefix]" expect util is "libj_[operation]"
 	- libj_perf_[write,record]
 	- libj_perf_adjust
 	- libj_perf_usage
+* joseph_net
+  - libj_net_[init, prep, done]
+  - libj_net_[send, recv]
+  - libj_net_zmq_[...] not supported yet
 
 ## Examples
-libj_getString:
+libj_utils:
 ```C++
 char *model;
+int *temperature;
 if (libj_getString("model", &model) < 0) //read "/data/joseph/model"
 	perror(strerror(errno));
-```
-jperf: 
-```C++
-libj_perf_adjust(); // adjust drift for high precision
-libj_perf_start();
-	// ... do some work
-libj_perf_stop();
-libj_perf_write("/data/joseph/jperf_data", "Job\tTime", "work:\t");
-JLD("%ld\n", libj_perf_time()); // print
-```
-libj_readCPU_alltemps:
-```C++
-int *temperature;
 if (libj_readCPU_alltemps(&temperature) < 0) 
   perror(strerror(errno));
 for (i = 0; i < CPU_NUM; i++) 
   printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
 if (libj_readCPU_alltemps_free(&temperature) < 0) 
   perror(strerror(errno));
+```
+libj_perf: 
+```C++
+libj_perf_adjust(); // adjust drift for high precision
+libj_perf_start();
+	// ... do some work
+libj_perf_stop();
+libj_perf_write("/tmp/joseph/jperf_data", "Job\tTime", "work:\t");
+char *msg = libj_perf_time();
+unsigned long msg_raw = libj_perf_time_raw();
+JLD("%s [%ld]\n", msg, msg_raw); //print 
+```
+libj_net:
+```C++
+struct Jsocket *sck;
+int i, role, port, msg_len;
+role= JNET_SERVER;
+port = 12345;
+msg_len = 255;
+if (libj_net_init(&sck, JNET_TCP) < 0) 
+  JLE("libj_net_init error");
+if (libj_net_prep(&sck, role, &port, NULL) < 0)
+  JLE("libj_net_prep error");
+char *msg;
+if (libj_net_recv(&sck, &msg, msg_len) < 0) // blocking call
+  JLE("libj_net_recv error");
+for(i = 0; i < msg_len; i++) 
+  *(msg+i) = (*msg) + 1; // shift
+if (libj_net_send(&sck, &msg) < 0) // msg len detected by ending null
+  JLE("libj_net_send error");
+// do more works 
+if (libj_net_done(&sck) < 0) // free mem and net associates 
+  JLE("libj_net_done error"); 
 ```
 
 ## Supported models

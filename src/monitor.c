@@ -6,14 +6,16 @@
 #endif
 
 #ifdef LOG_TAG
-#undef LOG_TAG 
+  #undef LOG_TAG 
 #endif
 
-#define LOG_TAG "TORH"
+#define LOG_TAG "libj"
 
 #define GOVERN "/sys/device/system/cpu/cpu%d/cpufreq/scaling_governor"
 
-int main (int argc, char *argv[]) {
+
+/* int main (int argc, char *argv[]) { */
+int monitor(int argc, char *argv[]){
 	if (argc != 2 && argv[0] != NULL) {
 		int a = 1;
 	}
@@ -32,15 +34,20 @@ int main (int argc, char *argv[]) {
 	
   char st[2048];
 	struct jcpu **cpu;
+#ifdef ANDROID
 	libj_CPU_ops(&cpu);
+#endif
 
 	while(1) {
 		usleep(period);
+#ifdef ANDROID
 		if (libj_CPU_read(cpu) != -1) {
 			bzero(st, 2048);
 
 #if _PRODUCT == _hima
-      sprintf(st, "%lu, %d,%d,%d,%d,%d,%d,%d,%d, %d,%d,%d,%d,%d,%d,%d,%d\n", getmicro(),
+      sprintf(st, "%lu, %d,%d,%d,%d,%d,%d,%d,%d, \
+          %d,%d,%d,%d,%d,%d,%d,%d\n",
+				libj_perf_getmicro(),
 				cpu[0]->temp, cpu[1]->temp, 
         cpu[2]->temp, cpu[3]->temp,
 				cpu[4]->temp, cpu[5]->temp, 
@@ -52,7 +59,7 @@ int main (int argc, char *argv[]) {
           
 /* sprintf(st, "%lu, %d, %d, %d, %d, %d, %d, %d, %d, %d,%d, %d,%d, 
 %d,%d, %d,%d, %d,%d, %d,%d, %d,%d, %d,%d\n",
-				getmicro(),
+				libj_perf_getmicro(),
 				cpu[0]->temp, cpu[1]->temp, 
 cpu[2]->temp, cpu[3]->temp,
 				cpu[4]->temp, cpu[5]->temp, 
@@ -67,14 +74,15 @@ cpu[5]->util, cpu[5]->freq,
 cpu[7]->util, cpu[7]->freq); */
 #else
       sprintf(st, "%lu, %d,%d,%d,%d, %d,%d,%d,%d\n",
-				getmicro(),
+				libj_perf_getmicro(),
 				cpu[0]->temp, cpu[1]->temp, 
         cpu[2]->temp, cpu[3]->temp,
 				cpu[0]->freq, cpu[1]->freq, 
         cpu[2]->freq, cpu[3]->freq);
-#endif
+#endif // PRODUCT
       ALOGD("%s", st);
 		}
+#endif // ANDROID
 	}
 	return 0;
 }

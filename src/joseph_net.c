@@ -60,7 +60,10 @@ int libj_net_init(struct Jsocket **sck, int type) {
 
 /* 
  *	addr can be NULL for Server
- *
+ *  role: server or client
+ *  port: desired port
+ *  addr: binding addr (default is NULL for server and required for
+ *  client)
  * 
  */ 
 int libj_net_prep(struct Jsocket **sck, int role, int *port, char *addr) {
