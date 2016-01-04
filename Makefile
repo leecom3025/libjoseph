@@ -1,3 +1,10 @@
+###########################################################
+#	Makefile for libjoseph :) 
+#
+#
+#
+###########################################################
+
 CC := gcc
 DEBUG := -g -DDEBUG
 WARM := -Wall -Wno-unused-variable \
@@ -29,12 +36,13 @@ $(EXECUTABLE): $(OBJ)
 
 libjoseph.so: $(OBJ)
 			$(CC) $(OBJ) -shared -o $@ $(LDFLAGS)
+			$(RM) $(OBJ) *~
 
 install: .libinstall .hdrinstall
 
 .libinstall: $(LIBRARIES)
 	install libjoseph.so /usr/local/lib/
-	-touch .libinstall
+	# -touch .libinstall
 
 .hdrinstall: include/libjoseph.h
 	install include/joseph_common.h /usr/local/include/
@@ -42,7 +50,7 @@ install: .libinstall .hdrinstall
 	install include/joseph_utils.h /usr/local/include/
 	install include/joseph_net.h /usr/local/include/
 	install include/joseph_perf.h /usr/local/include/
-	-touch .hdrinstall
+	# -touch .hdrinstall
 
 clean: 
 	$(RM) $(OBJ) $(EXECUTABLE) $(LIBRARIES) *~
