@@ -20,15 +20,17 @@
   #include "joseph_net.h"
 #endif
 /*
- *	libj_net_init
- *	libj_net_prep
- * 	libj_net_send/recv
- * 	libj_net_done
- *
+ * flow:
+ *  struct Jsocket *sck;
+ *  libj_net_init(&sck, JNET_[TCP or UDP])
+ *  libj_net_prep(&sck, JNET_[SERVER or CLIENT], port, target addr)
+ *  libj_net_send/recv
+ *  //do more
+ *  libj_net_done
  */ 
 
 /* 
- * 
+ *   
  */
 int libj_net_init(struct Jsocket **sck, int type) {
 	if (sck == NULL || type < 0)
@@ -49,7 +51,8 @@ int libj_net_init(struct Jsocket **sck, int type) {
     JNET_ERR(ptr);
 
 
-	setsockopt(ptr->socket, SOL_SOCKET, SO_REUSEADDR, &(ptr->socket), sizeof(int));
+	setsockopt(ptr->socket, SOL_SOCKET, SO_REUSEADDR, &(ptr->socket), 
+      sizeof(int));
 	ptr->si_len = sizeof(struct sockaddr_in);
 	memset((void*) &(ptr->si), 0, ptr->si_len);
 	(ptr->si).sin_family = AF_INET;
@@ -66,7 +69,8 @@ int libj_net_init(struct Jsocket **sck, int type) {
  *  client)
  * 
  */ 
-int libj_net_prep(struct Jsocket **sck, int role, int *port, char *addr) {
+int libj_net_prep(struct Jsocket **sck, int role, int *port, 
+    char *addr) {
 	if (sck == NULL || role < 0 || port == NULL || *port < 0)
 		return -1;
 
@@ -81,7 +85,8 @@ int libj_net_prep(struct Jsocket **sck, int role, int *port, char *addr) {
 	}
 
 	if ((role & JNET_SERVER)) {
-		if (bind(ptr->socket, (struct sockaddr*)(&(ptr->si)), ptr->si_len) < 0)
+		if (bind(ptr->socket, (struct sockaddr*)(&(ptr->si)), 
+          ptr->si_len) < 0)
 			JNET_ERR(ptr);
 		if (ptr->type == JNET_TCP) {
 			struct sockaddr _client;
@@ -136,8 +141,8 @@ int libj_net_send(struct Jsocket **sck, char **msg) {
 				JNET_ERR(ptr);
 			break;
 		case JNET_UDP:
-			if (sendto(socket, *msg, _len, 0, (struct sockaddr*)(&(ptr->si)),
-				ptr->si_len) < 0)
+			if (sendto(socket, *msg, _len, 0, 
+            (struct sockaddr*)(&(ptr->si)), ptr->si_len) < 0)
 				JNET_ERR(ptr);
 			break;
 		default:
@@ -171,7 +176,8 @@ int libj_net_recv(struct Jsocket **sck, char **buffer, size_t len) {
 				JNET_ERR(ptr);
 			break;
 		case JNET_UDP:
-			if (recvfrom(socket, _buf, len, 0, &_client, (socklen_t*)&(ptr->si_len)) < 0)
+			if (recvfrom(socket, _buf, len, 0, &_client, 
+            (socklen_t*)&(ptr->si_len)) < 0)
 				JNET_ERR(ptr);
 			break;
 		default:
