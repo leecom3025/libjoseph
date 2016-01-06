@@ -46,17 +46,48 @@ void libj_perf_start() {
 	unsigned long curr = libj_perf_getmicro();
 	jperf = (struct timeMeasure*) malloc(sizeof(struct timeMeasure));
 	jperf->time_start = curr;
+  jperf->state = RUNNING;
 #endif
 }
 
 void libj_perf_stop() {
 #ifdef JPERF_ENABLE
 	unsigned long curr = libj_perf_getmicro();
-	if(!jperf) {
-		JLE("You didn't call libj_perf_start()!\n\t(a.k.a. YOU ARE STUPID LOL)");
-	}
-	jperf->time_end = curr;
-	jperf->time_took = jperf->time_end - jperf->time_start;
+  NULL_CHECK(jperf);
+  if (jperf->state == RUNNING) {
+    jperf->time_end = curr;
+    jperf->time_took = jperf->time_end - jperf->time_start;
+    jperf->state = STOP;
+  }
+#endif
+}
+
+void libj_perf_pause() {
+#ifdef JPERF_ENABLE
+  unsigned long curr = libj_perf_getmicro();
+  NULL_CHECK(jperf);
+
+  if (jperf->state == RUNNING) {
+    jperf->time_end = curr;
+    jperf->time_took += jperf->time_end - jperf->time_start;
+    jperf->state = PAUSED; 
+  }
+#endif
+}
+
+void libj_perf_resume() {
+#ifdef JPERF_ENABLE
+  unsigned long curr = libj_perf_getmicro();
+  NULL_CHECK(jperf);
+  
+  if (jperf->state == RUNNING) {
+    JLW("libj_perf already running");
+  } else if (jperf->state == PAUSED) {
+    jperf->time_start = curr;
+    jperf->state = RUNNING;
+    /* JLW("libj_perf paused"); */
+  }
+
 #endif
 }
 
@@ -76,7 +107,8 @@ unsigned long libj_perf_time_raw() {
 #endif
 	
 	ret = jperf->time_took - drift;
-	free(jperf);
+  if (jperf->state == STOP || jperf->state == INVALID)
+    free(jperf);
 #endif
 
 	return ret;

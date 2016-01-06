@@ -38,12 +38,25 @@
 #include "joseph_common.h"
 
 // #define libj_perf_PRECISION 100 /* adjust time to write */
+#define NULL_CHECK(x) if (!x) JLE("You didn't call libj_perf_start()!\n")
 
 typedef struct timeMeasure {
 	unsigned long time_start;
 	unsigned long time_end;
 	unsigned long time_took;
+  /* 0 - running 
+   * 1 - paused
+   * 2 - stop
+   * 3 - invalid
+   */
+  int state; 
+
 } timeMeasure;
+
+static const int RUNNING  =   0;
+static const int PAUSED   =   1;
+static const int STOP     =   2;
+static const int INVALID  =   3;
 
 static struct timeMeasure *jperf;
 static double drift;
@@ -55,6 +68,8 @@ extern "C" {
 
 	unsigned long libj_perf_getmicro();
 	void libj_perf_start();
+  void libj_perf_pause();
+  void libj_perf_resume();
 	void libj_perf_stop();
 	unsigned long libj_perf_time_raw();
 	char* libj_perf_time();
