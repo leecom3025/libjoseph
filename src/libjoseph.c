@@ -105,7 +105,7 @@ int main (int argc, char* argv[]) {
 	libj_perf_adjust();
 	libj_perf_start();
   int perf_i;
-  for (perf_i=0; perf_i < 1234567; perf_i++) {
+  for (perf_i=0; perf_i < 12345; perf_i++) {
     if ((perf_i % 1000) == 0) {
       libj_perf_pause();
       printf("loop time: %s\n", libj_perf_time());

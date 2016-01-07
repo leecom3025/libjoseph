@@ -19,6 +19,7 @@ The convention is "libj_[prefix]" expect util is "libj_[operation]"
 	- libj_readCPU_freq
 * joseph_perf
 	- libj_perf_[start,stop,time]
+  - libj_perf_[pause,resume]
 	- libj_perf_record_[init,delete]
 	- libj_perf_[write,record]
 	- libj_perf_adjust

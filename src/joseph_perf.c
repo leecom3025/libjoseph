@@ -45,7 +45,11 @@ void libj_perf_start() {
 #ifdef JPERF_ENABLE
 	unsigned long curr = libj_perf_getmicro();
 	jperf = (struct timeMeasure*) malloc(sizeof(struct timeMeasure));
+  NULL_CHECK(jperf);
+
 	jperf->time_start = curr;
+  jperf->time_end = curr;
+  jperf->time_took = 0;
   jperf->state = RUNNING;
 #endif
 }
@@ -56,7 +60,7 @@ void libj_perf_stop() {
   NULL_CHECK(jperf);
   if (jperf->state == RUNNING) {
     jperf->time_end = curr;
-    jperf->time_took = jperf->time_end - jperf->time_start;
+    jperf->time_took += jperf->time_end - jperf->time_start;
     jperf->state = STOP;
   }
 #endif
@@ -77,17 +81,13 @@ void libj_perf_pause() {
 
 void libj_perf_resume() {
 #ifdef JPERF_ENABLE
-  unsigned long curr = libj_perf_getmicro();
   NULL_CHECK(jperf);
-  
-  if (jperf->state == RUNNING) {
-    JLW("libj_perf already running");
-  } else if (jperf->state == PAUSED) {
+  if (jperf->state == PAUSED) {
+    unsigned long curr = libj_perf_getmicro();
     jperf->time_start = curr;
     jperf->state = RUNNING;
     /* JLW("libj_perf paused"); */
   }
-
 #endif
 }
 
@@ -143,7 +143,8 @@ int libj_perf_record_init(char* filename, char* header)
 	FILE *out = fopen(filename, "w");
 	fprintf(out, "%s", TEMRS_OF_POLICY);
 	fprintf(out, "%s\n", header);
-	fprintf(out, "=======================================================\n");
+	fprintf(out, "===============================================\
+      ========\n");
 	fclose(out);
 #endif
 
@@ -191,11 +192,9 @@ int libj_perf_write(char* filename, char* header, char* pattern) {
 
 	if (access(filename, F_OK) == -1)
 		libj_perf_record_init(filename, header);
-	FILE *out = fopen(filename, "a");
 
+  FILE *out = fopen(filename, "a");
 	jperf->time_took -= drift;
-	// printf("%f\n", drift);
-
 	fprintf(out, "%s%lu\n", pattern, jperf->time_took);
 	fclose(out);
 #endif
