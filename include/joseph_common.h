@@ -35,6 +35,9 @@
 	""
 #endif
 
+#define J_false   0
+#define J_true    1
+
 #ifdef ANDROID
   #include <cutils/properties.h>
   #include <android/log.h>
