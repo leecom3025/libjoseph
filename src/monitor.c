@@ -11,13 +11,6 @@
 
 #define LOG_TAG "libj"
 
-int main(int argc, char *argv[]) {
-	if (argc != 2 && argv[0] != NULL) {
-		int a = 1;
-	}
-  return monitor(argc, arvg);
-}
-
 int monitor(int argc, char *argv[]) {
   int c, i; 
 	int period = 100000; // 100 mili == 0.1 sec
@@ -49,7 +42,7 @@ int monitor(int argc, char *argv[]) {
         avg_tmp += cpu[i]->temp;
       }
       avg_tmp /= CPU_NUM;
-      libj_setString("avg_temp", avg_tmp);
+      libj_setDouble("avg_temp", avg_tmp);
 
       if (verbose) {
         bzero(st, 2048);
@@ -66,7 +59,7 @@ int monitor(int argc, char *argv[]) {
           cpu[4]->freq, cpu[5]->freq, 
           cpu[6]->freq, cpu[7]->freq);
 #else
-        sprintf(st, "%ls, %d,%d,%d,%d, %d,%d,%d,%d\n",
+        sprintf(st, "%s, %d,%d,%d,%d, %d,%d,%d,%d\n",
           libj_perf_getmicro(),
           cpu[0]->temp, cpu[1]->temp, 
           cpu[2]->temp, cpu[3]->temp,
@@ -81,3 +74,9 @@ int monitor(int argc, char *argv[]) {
 	return 0;
 }
 
+int main(int argc, char *argv[]) {
+	if (argc != 2 && argv[0] != NULL) {
+		int a = 1;
+	}
+  return monitor(argc, argv);
+}

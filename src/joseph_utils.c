@@ -65,21 +65,36 @@ int libj_getPath(char *arg, char **result) {
     JLE("ERROR: %s", "arg is NULL");
     return -1;
   }
+  char *DPath;
+  if (bool_DPath == J_true)
+    DPath = char_DPath;
+  else
+    DPath = DEFAULT_PATH;
 
-  int len = strlen(DEFAULT_PATH);
+  int len = strlen(DPath);
   if ((len += strlen(arg)) > 255) {
     JLE("ERROR: %s%zu%s", "path is too long (", strlen(arg), ")");
     return -1;
   }
 
   *result = (char*) malloc(len);
-  sprintf(*result, "%s/%s", DEFAULT_PATH, arg);
+  sprintf(*result, "%s/%s", DPath, arg);
   return 0;
 }
 
 
 // set default path
 int libj_setDPath(char *arg){
+  if (arg == NULL)
+    return -1;
+  int len = strlen(arg);
+  if (bool_DPath == J_true)
+    free(char_DPath);
+
+  char_DPath = (char*) malloc(len);
+  sprintf(char_DPath, "%s", arg);
+  bool_DPath = J_true;
+
   return 0;
 }
 
@@ -313,7 +328,7 @@ int libj_CPU_init(struct jcpu **c, int id) {
 		return -1;
 
 done:
-	printf("init for %d at %08x\n", id, cpu);
+	printf("init for %d\n", id);
 	cpu->id = id;
 	cpu->temp = 0;
 	cpu->util = 0;
@@ -484,11 +499,10 @@ done:
 	return 0;
 }
 
-int libj_Freq_stat_get(struct freq_str *freq){
-  return 0;
-}
-
 int libj_Freq_stat_init(struct jcpu *cpu){
+  if (cpu == NULL)
+    return -1;
+#if defined ANDROID && _PRODUCT == _hima
   FILE *fp;
   char *fileName, *line = NULL;
   size_t len = 0;
@@ -509,10 +523,14 @@ int libj_Freq_stat_init(struct jcpu *cpu){
   cpu->max_freq = cpu->freq_a[i-1].id;
 
   fclose(fp);
+#endif // ANDROID
   return 0; 
 }
 
 int libj_Freq_stat_read(struct jcpu *cpu){
+  if (cpu == NULL)
+    return -1;
+#if defined ANDROID && _PRODUCT == _hima
   FILE *fp;
   char *fileName, *line = NULL;
   size_t len = 0;
@@ -548,6 +566,7 @@ int libj_Freq_stat_read(struct jcpu *cpu){
 //  printf ("%d util: %d\n", cpu->id, cpu->util);
 
   fclose(fp);
+#endif 
   return 0; 
 }
 
