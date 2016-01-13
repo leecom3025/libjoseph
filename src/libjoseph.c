@@ -115,7 +115,9 @@ int main (int argc, char* argv[]) {
     }
   }
 	libj_perf_stop();
-	libj_perf_write(path, "Job\tTaken", "Sleep:\t");
+  libj_perf_write("libj_perf_test", "Job\tTaken", "Sleep:\t");
+  libj_getString("libj_perf_test", &string_test);
+  printf("%s\n", string_test);
 	printf("%ld\n", libj_perf_time_raw());
 	JLT("JPerf passed!");
 

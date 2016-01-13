@@ -114,16 +114,22 @@ unsigned long libj_perf_time_raw() {
 	return ret;
 }
 
-char *libj_perf_time() 
-{
+/*
+ *  this one returns pointer to str 
+ *  use libj_perf_time_raw() for ulong
+ */
+char *libj_perf_time() {
   char *ret;
   ret = (char*)malloc(sizeof(unsigned long));
   sprintf(ret, "%ld", libj_perf_time_raw());
   return ret;
 }
 
-int libj_perf_record_init(char* filename, char* header) 
-{
+/*
+ * this one does not have to be called by dev 
+ * called from *libj_perf_record_write* if not initialized
+ */
+int libj_perf_record_init(char* filename, char* header) {
 	if (filename == NULL) {
 		JLE("filename is NULL");
 		return -1;
@@ -136,18 +142,32 @@ int libj_perf_record_init(char* filename, char* header)
 
 #ifdef JPERF_ENABLE
 	if (!jperf) {
-		JLE("libj_perf_record_init() failed");
+		JLE("libj_perf_record_init() failed [jperf is NULL]");
 		return -1;
 	}
-
-	FILE *out = fopen(filename, "w");
-	fprintf(out, "%s", TEMRS_OF_POLICY);
-	fprintf(out, "%s\n", header);
-	fprintf(out, "===============================================\
-      ========\n");
-	fclose(out);
+  
+  char *template, *buff;
+#if defined TERM
+  template = "%s%s\n====================\n";
+#else 
+  template = "%s\n===================\n";
 #endif
+  buff = (char*) malloc(strlen(header) + 
+#if defined TERM
+      strlen(ToP) +
+#endif 
+      strlen(template));
 
+  sprintf(buff, template, 
+#if defined TERM
+      ToP, 
+#endif 
+      header);
+  if (libj_appendString(filename, &buff) < -1) {
+    JLE("%s failed [appendString failed]", __FUNCTION__);
+    return -1;
+  }
+#endif
 	return 0;
 }
 
@@ -168,7 +188,7 @@ int libj_perf_record_delete(char* filename) {
 	return ret;
 }
 
-int libj_perf_write(char* filename, char* header, char* pattern) {
+int libj_perf_write(char *filename, char *header, char *pattern) {
 	if (filename == NULL) {
 		JLE("filename is NULL");
 		return -1;
@@ -190,15 +210,24 @@ int libj_perf_write(char* filename, char* header, char* pattern) {
 		return -1;
 	}
 
-	if (access(filename, F_OK) == -1)
-		libj_perf_record_init(filename, header);
+  char *path, *template;
+  if (libj_getPath(filename, &path) < 0) {
+    JLE("libj_getPath errorrrrr");
+    return -1;
+  }
+  
+  if (access(path, F_OK) < 0) 
+    libj_perf_record_init(filename, header);
+  jperf->time_took -= drift;
+  template = (char*) malloc(strlen(pattern) 
+      + sizeof(jperf->time_took));
+  sprintf(template, "%s%lu\n", pattern, jperf->time_took);
 
-  FILE *out = fopen(filename, "a");
-	jperf->time_took -= drift;
-	fprintf(out, "%s%lu\n", pattern, jperf->time_took);
-	fclose(out);
+  if (libj_appendString(filename, &template) < 0) {
+    JLE("appendString errorrrr");
+    return -1;
+  }
 #endif
-
 	return 0;
 }
 

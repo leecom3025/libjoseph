@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 HyunJong Joseph Lee, Korvo, CERCS, Georgia Tech
+ * Copyright (C) 2015 HyunJong Joseph Lee
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,25 +21,27 @@
 #ifdef TERM 
 	#define TEMRS_OF_POLICY \
 	"/*\n"\
-	" * Copyright (C) 2015 HyunJong Joseph Lee, Korvo, CERCS,\n"\
+	" * Copyright (C) 2015 HyunJong Joseph Lee, CERCS,\n"\
 	" *	\tGeorgia Institute of Technology\n"\
 	" *\n"\
-	" * Unless required by applicable law or agreed to in writing, software\n"\
-	" * distributed under the License is distributed on an \"AS IS\" BASIS,\n"\
-	" * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.\n"\
-	" * See the License for the specific language governing permissions and\n"\
-	" * limitations under the License.\n"\
+	" * Unless required by applicable law or agreed to in writing, \n"\
+  " * software distributed under the License is distributed on an \n"\
+  " * \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY \n"\
+  " * KIND, either express or implied. See the License for the \n"\
+  " * specific language governing permissions and limitations \n"\
+  " * under the License.\n"\
 	" */\n\n"
 #else
 	#define TEMRS_OF_POLICY \
 	""
 #endif
 
+#define ToP TEMRS_OF_POLICY
+
 #ifdef ANDROID
   #include <cutils/properties.h>
   #include <android/log.h>
   #include <utils/Log.h>
-//  #include <cutils/logger.h>
   #include <errno.h>
 #else
   #include <errno.h>

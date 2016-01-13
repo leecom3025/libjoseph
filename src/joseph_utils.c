@@ -66,8 +66,8 @@ int libj_getPath(char *arg, char **result) {
     return -1;
   }
 
-  int len = strlen(DEFAULT_PATH);
-  if ((len += strlen(arg)) > 255) {
+  size_t len = strlen(DEFAULT_PATH) + strlen(arg);
+  if (len > 255) { 
     JLE("ERROR: %s%zu%s", "path is too long (", strlen(arg), ")");
     return -1;
   }
@@ -116,9 +116,9 @@ int libj_getString(char *arg, char **result) {
 #if defined HOST_ANDROID
   return 0;
 #endif
-  int fd;
+  int fd, i;
   char *path;
-  char mTemp[256];
+  char mTemp[2560];
   memset(mTemp, 0, sizeof(mTemp));
 
   if (libj_getPath(arg, &path) < 0)
@@ -266,17 +266,17 @@ int libj_appendString(char *arg, char **value) {
 #if defined HOST_ANDROID
   return 0;
 #endif
-  FILE* fd;
+  FILE *fd;
   char *path;
 
   if (libj_getPath(arg, &path) < 0)
     return -1;
-
   fd = fopen(path, "a+");
   if (fd == NULL) {
     JLE("ERROR: %s", strerror(errno));
     return -1;
   }
+
   fprintf(fd, "%s", *value);
   fclose(fd);
   return 0;

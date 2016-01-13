@@ -11,7 +11,7 @@ WARM := -Wall -Wno-unused-variable \
 			 -Wno-unused-but-set-variable \
 			 -Wno-format-contains-nul
 ARCH := -DX86=1
-ENABLE := -DJPERF_ENABLE=1 #\
+ENABLE := -DJPERF_ENABLE=1 -DTERM=1	#\
 				 -DWITH_ZMQ=1
 J_CXXFLAGS := -I. -I/usr/local/include \
 							-pthread -fPIC #-std=c++11
