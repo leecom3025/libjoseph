@@ -48,6 +48,8 @@ extern "C" {
 
 	int libj_appendString(char *arg, char **value);
 	int libj_resetFile(char *arg);
+  static int bool_DPath = J_false;
+  static char *char_DPath;
 
 	/* 
 	(CPU_OFFSET | CPU)

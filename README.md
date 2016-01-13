@@ -18,12 +18,12 @@ The convention is "libj_[prefix]" expect util is "libj_[operation]"
 	- libj_readCPU_util
 	- libj_readCPU_freq
 * joseph_perf
-	- libj_perf_[start,stop,time]
+  - libj_perf_[start,stop,time]
   - libj_perf_[pause,resume]
-	- libj_perf_record_[init,delete]
-	- libj_perf_[write,record]
-	- libj_perf_adjust
-	- libj_perf_usage
+  - libj_perf_record_[init,delete]
+  - libj_perf_[write,record]
+  - libj_perf_adjust
+  - libj_perf_usage
 * joseph_net
   - libj_net_[init, prep, done]
   - libj_net_[send, recv]
@@ -33,15 +33,15 @@ The convention is "libj_[prefix]" expect util is "libj_[operation]"
 libj_utils:
 ```C++
 char *model;
-int *temperature;
+struct jcpu *cpu;
 if (libj_getString("model", &model) < 0) //read "/data/joseph/model"
 	perror(strerror(errno));
-if (libj_readCPU_alltemps(&temperature) < 0) 
-  perror(strerror(errno));
+if (libj_CPU_ops(&cpu) < 0)
+  perror (strerror(errno));
+if (libj_CPU_read(&cpu) < 0) 
+  perror (strerror(errno));
 for (i = 0; i < CPU_NUM; i++) 
-  printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
-if (libj_readCPU_alltemps_free(&temperature) < 0) 
-  perror(strerror(errno));
+  printf("CPU %d temperature: %d ['C] frequency: %d\n", i, cpu[i]->temp, cpu[i]->freq);
 ```
 libj_perf: 
 ```C++

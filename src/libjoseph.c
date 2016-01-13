@@ -111,7 +111,7 @@ int main (int argc, char* argv[]) {
       printf("loop time: %s\n", libj_perf_time());
     } else {
       libj_perf_resume();
-      usleep(100);
+      usleep(10);
     }
   }
 	libj_perf_stop();
@@ -135,37 +135,38 @@ int main (int argc, char* argv[]) {
 	JLT("cJSON passed!");
 #endif
 
+#if !defined ANDROID
+  int CPU_NUM = sysconf(_SC_NPROCESSORS_ONLN);
+  printf("CPU_NUM: %d\n", CPU_NUM);
+#endif 
+
+
+
 	/* Thermal unit supported for Android only currently */
 #if defined ANDROID
 	JLT("====== joseph_thermal test ======");
 
 	int online, kk;
 	int *temperature, *utils, *freqs;
+  struct jcpu **cpu;
+  char *printf_line, *printf_template, *printf_buf;
+  if (libj_CPU_ops(&cpu) == -1)
+    return -1;
 
-	libj_readCPU_alltemps(&temperature);
-	for (i = 0; i < CPU_NUM; i++) {
-		printf("CPU %d temperature: %d ['C]\n", i, *(temperature + i));
-	}
-	libj_readCPU_alltemps_free(&temperature);
+  if (libj_CPU_read(cpu) != -1) {
+    printf("time: %s\n", libj_perf_getmicro());
+    printf_line = "CPU-%d temperature: %d 'C frequency: %d Hz\n";
+    printf_template = (char*) malloc(strlen(printf_line) * CPU_NUM);
+    printf_buf = (char*) malloc(strlen(printf_line));
 
-	libj_readCPU_allutils(&utils, &online);
-	for (i = 0; i < online; i++) {
-		printf("CPU %d util: %d%%\n", i, *(utils + i));
-	}
-	libj_readCPU_allutils_free(&utils);
-
-	libj_readCPU_allfreqs(&freqs, &online);
-	for (i = 0; i < online; i++) {
-		printf("CPU %d freq: %dHz\n", i, *(freqs + i));
-	}
-	libj_readCPU_allfreqs_free(&freqs);
-
-	libj_readCPU_both(&utils, &freqs, &online);
-	for (i = 0; i < online; i++) {
-		printf("CPU %d: (%d%%, %dHz)\n", i, *(utils + i), *(freqs + i));
-	}
-	libj_readCPU_both_free(&utils, &freqs);
-	JLT("JTherm passed!");
+    for (i = 0; i < CPU_NUM; i++) {
+      sprintf(printf_buf, printf_line, i, cpu[i]->temp, cpu[i]->freq);
+      strcat(printf_template, printf_buf);
+    }
+    JLT(printf_template);
+    JLT("JTherm passed!");
+  } else 
+    JLT("JTherm failed :( !");
 #endif
 
 	JLT("====== joseph_net test ======");

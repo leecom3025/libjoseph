@@ -37,6 +37,8 @@
 #endif
 
 #define ToP TEMRS_OF_POLICY
+#define J_false   0
+#define J_true    1
 
 #ifdef ANDROID
   #include <cutils/properties.h>
