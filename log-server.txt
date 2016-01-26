@@ -1,0 +1,11 @@
+[33280473.669936] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_alloc_mpcb: created mpcb with token 0x2af72686
+[33280473.669987] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0x2af72686 pi 1, src_addr:172.31.47.23:30331 dst_addr:141.212.110.233:58598, cnt_subflows now 1
+[33280473.791492] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0x2af72686 pi 2, src_addr:172.31.47.23:30331 dst_addr:141.212.110.233:38607, cnt_subflows now 2
+[33280473.792166] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0x2af72686 pi 3, src_addr:172.31.47.23:30331 dst_addr:141.212.110.233:46521, cnt_subflows now 3
+[33280473.792293] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0x2af72686 pi 4, src_addr:172.31.47.23:30331 dst_addr:141.212.110.233:38896, cnt_subflows now 4
+[33280545.140639] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_close: Close of meta_sk with tok 0x2af72686
+[33280545.153609] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0x2af72686 pi:3 state 7 is_meta? 0
+[33280545.153625] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0x2af72686 pi:2 state 7 is_meta? 0
+[33280545.153635] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0x2af72686 pi:1 state 7 is_meta? 0
+[33280545.214779] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0x2af72686 pi:4 state 7 is_meta? 0
+[33280545.214801] /home/rb/kernels/mptcp/net/mptcp/mptcp_ctrl.c: mptcp_sock_destruct destroying meta-sk
