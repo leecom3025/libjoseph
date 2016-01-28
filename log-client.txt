@@ -1,0 +1,41 @@
+[ 4048.313839] net/mptcp/mptcp_ctrl.c: saddr=141.212.110.233:58598, daddr=52.11.103.50:30331 [key=163bdd4a5e4c2f36]
+[ 4048.374944] net/mptcp/mptcp_ctrl.c: mptcp_alloc_mpcb: created mpcb with token 0xb4fe63df
+[ 4048.374964] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 1, src_addr:141.212.110.233:58598 dst_addr:52.11.103.50:30331, cnt_subflows now 1
+[ 4048.436080] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 2, src_addr:0.0.0.0:0 dst_addr:0.0.0.0:0, cnt_subflows now 2
+[ 4048.436087] net/mptcp/mptcp_ipv4.c: timer expires in 0
+[ 4048.436099] net/mptcp/mptcp_ipv4.c: mptcp_init4_subsockets: token 0xb4fe63df pi 2 src_addr:141.212.110.233:0 dst_addr:52.11.103.50:30331
+[ 4048.436114] TCP: net/ipv4/tcp_output.c: JOSEPH nonce for new subflows is 3986212555
+[ 4048.436139] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 3, src_addr:0.0.0.0:0 dst_addr:0.0.0.0:0, cnt_subflows now 3
+[ 4048.436142] net/mptcp/mptcp_ipv4.c: timer expires in 0
+[ 4048.436149] net/mptcp/mptcp_ipv4.c: mptcp_init4_subsockets: token 0xb4fe63df pi 3 src_addr:141.212.110.233:0 dst_addr:52.11.103.50:30331
+[ 4048.436157] TCP: net/ipv4/tcp_output.c: JOSEPH nonce for new subflows is 196853975
+[ 4048.436170] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 4, src_addr:0.0.0.0:0 dst_addr:0.0.0.0:0, cnt_subflows now 4
+[ 4048.436173] net/mptcp/mptcp_ipv4.c: timer expires in 0
+[ 4048.436179] net/mptcp/mptcp_ipv4.c: mptcp_init4_subsockets: token 0xb4fe63df pi 4 src_addr:141.212.110.233:0 dst_addr:52.11.103.50:30331
+[ 4048.436186] TCP: net/ipv4/tcp_output.c: JOSEPH nonce for new subflows is 1169545695
+[ 4048.436199] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 5, src_addr:0.0.0.0:0 dst_addr:0.0.0.0:0, cnt_subflows now 5
+[ 4048.436202] net/mptcp/mptcp_ipv4.c: timer expires in 0
+[ 4048.436208] net/mptcp/mptcp_ipv4.c: mptcp_init4_subsockets: token 0xb4fe63df pi 5 src_addr:141.212.110.150:0 dst_addr:52.11.103.50:30331
+[ 4048.436216] TCP: net/ipv4/tcp_output.c: JOSEPH nonce for new subflows is 2042606235
+[ 4048.436228] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 6, src_addr:0.0.0.0:0 dst_addr:0.0.0.0:0, cnt_subflows now 6
+[ 4048.436231] net/mptcp/mptcp_ipv4.c: timer expires in 0
+[ 4048.436237] net/mptcp/mptcp_ipv4.c: mptcp_init4_subsockets: token 0xb4fe63df pi 6 src_addr:141.212.110.150:0 dst_addr:52.11.103.50:30331
+[ 4048.436245] TCP: net/ipv4/tcp_output.c: JOSEPH nonce for new subflows is 1308307735
+[ 4048.436258] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 7, src_addr:0.0.0.0:0 dst_addr:0.0.0.0:0, cnt_subflows now 7
+[ 4048.436261] net/mptcp/mptcp_ipv4.c: timer expires in 0
+[ 4048.436268] net/mptcp/mptcp_ipv4.c: mptcp_init4_subsockets: token 0xb4fe63df pi 7 src_addr:141.212.110.150:0 dst_addr:52.11.103.50:30331
+[ 4048.436275] TCP: net/ipv4/tcp_output.c: JOSEPH nonce for new subflows is 806348094
+[ 4048.436289] net/mptcp/mptcp_ctrl.c: mptcp_add_sock: token 0xb4fe63df pi 8, src_addr:0.0.0.0:0 dst_addr:0.0.0.0:0, cnt_subflows now 8
+[ 4048.436292] net/mptcp/mptcp_ipv4.c: timer expires in 0
+[ 4048.436298] net/mptcp/mptcp_ipv4.c: mptcp_init4_subsockets: token 0xb4fe63df pi 8 src_addr:141.212.110.150:0 dst_addr:52.11.103.50:30331
+[ 4048.436306] TCP: net/ipv4/tcp_output.c: JOSEPH nonce for new subflows is 1451849804
+[ 4119.882953] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:4 state 7 is_meta? 0
+[ 4119.883783] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:1 state 7 is_meta? 0
+[ 4119.883792] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:2 state 7 is_meta? 0
+[ 4119.883952] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:8 state 7 is_meta? 0
+[ 4119.883966] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:7 state 7 is_meta? 0
+[ 4119.883972] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:6 state 7 is_meta? 0
+[ 4119.883977] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:5 state 7 is_meta? 0
+[ 4119.883982] net/mptcp/mptcp_ctrl.c: mptcp_del_sock: Removing subsock tok 0xb4fe63df pi:3 state 7 is_meta? 0
+[ 4119.884187] net/mptcp/mptcp_ctrl.c: mptcp_close: Close of meta_sk with tok 0xb4fe63df
+[ 4119.884199] net/mptcp/mptcp_ctrl.c: mptcp_sock_destruct destroying meta-sk
