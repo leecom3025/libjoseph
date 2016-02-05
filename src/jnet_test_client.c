@@ -6,7 +6,6 @@
 #include <string.h>
 #include <errno.h>
 
-
 #include <sys/time.h>
 #include <sys/ioctl.h>
 #include <sys/mman.h>
@@ -17,7 +16,9 @@
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+
 #include <linux/tcp.h>
+#include "include/joseph_perf.h"
 
 #ifndef SOL_TCP // I know... this is not an elegant way to do
   #define SOL_TCP 6
@@ -29,7 +30,8 @@
 int main (int argc, char* argv[]) {
   /* char *msg = "TEST SUCCESS"; */
   char *addr, *msg, *msg_ptr;
-	int i, sck = 0, port = 30331, period = 200000, size = 0;
+	int i, sck = 0, port = 30331, period = 200000;
+  ssize_t size = 0;
   FILE *pFile;
   struct stat st;
   struct sockaddr_in s_addr;
@@ -54,11 +56,8 @@ int main (int argc, char* argv[]) {
   if (fread(msg, 1, size, pFile) < 0) printf("failed to read");
   fclose(pFile);
   
-  printf("SIZE::: %zu", strlen(msg));
-
   sck = socket(AF_INET, SOCK_STREAM, 0);
   if (!sck) perror("errrr");
-  
 
   bzero((char*) &s_addr, sizeof(s_addr));
   s_addr.sin_family = AF_INET;
@@ -76,14 +75,28 @@ int main (int argc, char* argv[]) {
 
   for (i=0; ; i++) {
     sprintf(msg_ptr, "%s - %d", msg, i);
-
-    if ( write(sck, msg_ptr, strlen(msg_ptr)) < 0) 
-      perror ("woops write error");
-
-    printf("sent: %d\n", i);
-
-    if ( read(sck, msg_ptr, strlen(msg) + sizeof(int32_t)) < 0)
-      perror ("woops read error");
+    int ret = 0;
+    size_t std = size;
+    size_t sent = 0;
+    int buf = 150000;
+    
+    libj_perf_start();
+    while (sent < std) {
+      if ( ( ret = write(sck, (char*)(msg_ptr+sent), buf)) < 0) 
+        perror ("woops write error");
+      sent += ret;
+      /* printf("sent-%d: %d <? %zu\n",i, sent, std); */
+    }
+    libj_perf_stop();
+    
+    /* ret = sent = 0; */
+    /* while (sent < std) { */ 
+    /*   if ( (ret = read(sck, (char*)(msg_ptr+sent), buf)) < 0) */
+    /*     perror ("woops read error"); */
+    /*   sent += ret; */
+    /*   printf("recv-%d: %d\n", i, sent); */
+    /* } */
+    printf("Done: %d [taken: %s]\n", i, libj_perf_time());
     usleep(period);
   }
 

@@ -16,9 +16,15 @@
 
 #ifdef X86
   #include "../include/joseph_net.h"
+  #include <linux/tcp.h>
 #else
   #include "joseph_net.h"
 #endif
+
+#ifndef SOL_TCP
+#define SOL_TCP IPPROTO_TCP
+#endif
+
 /*
  * flow:
  *  struct Jsocket *sck;
@@ -50,9 +56,16 @@ int libj_net_init(struct Jsocket **sck, int type) {
   if ((ptr->socket = socket(AF_INET, socket_type, 0)) == -1)
     JNET_ERR(ptr);
 
-
 	setsockopt(ptr->socket, SOL_SOCKET, SO_REUSEADDR, &(ptr->socket), 
       sizeof(int));
+
+  int bg = 1;
+  setsockopt(ptr->socket, SOL_TCP, MPTCP_CMM_BG, &bg, sizeof(int));
+
+  int big = 1;
+  setsockopt(ptr->socket, SOL_TCP, MPTCP_CMM_SIZE, &big,
+      sizeof(int));
+
 	ptr->si_len = sizeof(struct sockaddr_in);
 	memset((void*) &(ptr->si), 0, ptr->si_len);
 	(ptr->si).sin_family = AF_INET;
@@ -135,6 +148,7 @@ int libj_net_send(struct Jsocket **sck, char **msg) {
 
 	struct sockaddr _client;
 	size_t _len = strlen(*msg);
+  printf(_len);
 	switch (ptr->type) {
 		case JNET_TCP:
 			if (send(socket, *msg, _len, 0) < 0)

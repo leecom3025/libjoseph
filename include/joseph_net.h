@@ -27,9 +27,11 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/resource.h>
+/* #include <netinet/tcp.h> */
 #include <netinet/in.h>
 #include <netdb.h>
 #include <arpa/inet.h>
+/* #include <linux/tcp.h> */
 // #include <bluetooth/bluetooth.h>
 // #include <bluetooth/rfcomm.h>
 

@@ -11,7 +11,7 @@ WARM := -Wall -Wno-unused-variable \
 			 -Wno-unused-but-set-variable \
 			 -Wno-format-contains-nul
 ARCH := -DX86=1
-ENABLE := -DJPERF_ENABLE=1 -DTERM=1	#\
+ENABLE := -DJPERF_ENABLE=1 -DTERM=1 #\
 				 -DWITH_ZMQ=1
 J_CXXFLAGS := -I. -I/usr/local/include \
 							-pthread -fPIC #-std=c++11
@@ -65,3 +65,4 @@ dir:
 	echo \"This is test message\" > /tmp/joseph/string_test
 	echo 123.456 > /tmp/joseph/double_test
 	echo 123.45 > /tmp/joseph/float_test
+	cp README.md /tmp/joseph/send
