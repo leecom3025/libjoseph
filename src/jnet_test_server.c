@@ -3,7 +3,10 @@
 int main (int argc, char* argv[]) {
   struct Jsocket *sck;
   int port = 30331;
-  int len = 4096;
+  ssize_t len = 1073741824;
+  len += sizeof(int);
+  printf ("Get %zu\n", len);
+  size_t buf = 150000;
   
   if (libj_net_init(&sck, JNET_TCP) < 0 )
     JLE("libj_net_init");
@@ -11,12 +14,28 @@ int main (int argc, char* argv[]) {
     JLE("libj_net_prep");
   char *msg;
 
-  while (1) {
-    if (libj_net_recv(&sck, &msg, len) < 0)
-      JLE("libj_net_recv");
-    printf("%s\n", (char*)(msg + strlen(msg) - 20));
-    if (libj_net_send(&sck, &msg) < 0)
-      JLE("libj_net_send");
+  msg = (char*) malloc(len);
+
+  size_t rcv = 0;
+  int i = 0;
+  while(1) {
+    size_t ret = 0;
+    while (rcv < len) {
+      if ((ret = read(sck->socket, (char*)(msg+rcv), buf)) < 0)
+        JLE("WOOOOOPs");
+      rcv += ret;
+      /* printf("rcvd-%d: %zu\n", i, rcv); */
+    }
+
+    ret = rcv = 0;
+    /* while (rcv < len) { */
+    /*   if ((ret = write(sck->socket, (char*)(msg+rcv), buf)) < 0) */
+    /*     JLE("write errorrrr\n"); */
+    /*   rcv += ret; */
+    /*   printf("sent-%d: %zu\n", i, rcv); */
+    /* } */
+    printf("Done - %d\n", i);
+    i++;
   }
   
   if (libj_net_done(&sck) < 0)
